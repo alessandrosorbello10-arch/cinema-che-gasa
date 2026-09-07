@@ -1,0 +1,372 @@
+<!DOCTYPE html>
+<html lang="it">
+    <head>
+        <meta charset="UTF-8">
+        <meta name="viewport" content="width=device-width, initial-scale=1.0">
+        <title>Cinema che Gasa</title>
+
+        <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet">
+        <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.min.css">
+        <link rel="stylesheet" href="css/style.css">
+    </head>
+
+    <body>
+
+        <nav class="navbar navbar-expand-lg navbar-dark fixed-top">
+            <div class="container-fluid px-4">
+
+                <a class="navbar-brand fw-bold" href="#">Cinema che Gasa</a>
+
+                <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#mainNavbar" aria-controls="mainNavbar" aria-expanded="false" aria-label="Apri menu">
+                    <span class="navbar-toggler-icon"></span>
+                </button>
+
+                <div class="collapse navbar-collapse" id="mainNavbar">
+
+                    <ul class="navbar-nav mx-auto mb-2 mb-lg-0">
+
+                        <li class="nav-item">
+                            <a class="nav-link active" href="#">
+                                <i class="bi bi-house-door"></i> Home
+                            </a>
+                        </li>
+
+                        <li class="nav-item">
+                            <a class="nav-link" href="pagine/film.html">
+                                <i class="bi bi-film"></i> Film
+                            </a>
+                        </li>
+
+                        <li class="nav-item">
+                            <a class="nav-link" href="pagine/generi.html">
+                                <i class="bi bi-grid"></i> Generi
+                            </a>
+                        </li>
+
+                        <li class="nav-item">
+                            <a class="nav-link" href="pagine/classifiche.html">
+                                <i class="bi bi-trophy"></i> Classifiche
+                            </a>
+                        </li>
+
+                    </ul>
+
+                    <div class="d-flex gap-2" id="accountArea">
+                        <a href="pagine/login.html" class="btn btn-outline-light">
+                            <i class="bi bi-box-arrow-in-right"></i> Accedi
+                        </a>
+
+                        <a href="pagine/registrazione.html" class="btn btn-light">
+                            Registrati
+                        </a>
+                    </div>
+
+                </div>
+            </div>
+        </nav>
+
+
+        <section id="heroCarousel" class="carousel slide" data-bs-ride="carousel" data-bs-interval="3000">
+
+            <div class="carousel-indicators" id="heroIndicators"></div>
+
+            <div class="carousel-inner" id="heroSlides">
+
+                <div class="carousel-item active">
+
+                    <img
+                        src="https://placehold.co/1920x1080/111111/ffffff?text=CARICAMENTO..."
+                        class="hero-image"
+                        alt="Caricamento film"
+                    >
+
+                    <div class="hero-overlay"></div>
+
+                    <div class="hero-content">
+
+                        <span class="hero-label">FILM IN EVIDENZA</span>
+
+                        <h1>Caricamento...</h1>
+
+                        <p class="hero-info">
+                            2026 <span>•</span> La tua valutazione:
+                            <strong>-/10</strong>
+                        </p>
+
+                        <p class="hero-description">
+                            Stiamo caricando i film più recenti...
+                        </p>
+
+                        <a href="#" class="btn btn-light btn-lg">
+                            <i class="bi bi-play-fill"></i> Scopri il film
+                        </a>
+
+                    </div>
+                </div>
+
+            </div>
+
+
+            <button
+                class="carousel-control-prev"
+                type="button"
+                data-bs-target="#heroCarousel"
+                data-bs-slide="prev"
+            >
+                <span class="carousel-control-prev-icon"></span>
+            </button>
+
+            <button
+                class="carousel-control-next"
+                type="button"
+                data-bs-target="#heroCarousel"
+                data-bs-slide="next"
+            >
+                <span class="carousel-control-next-icon"></span>
+            </button>
+
+        </section>
+
+
+        <section class="stats-section">
+
+            <div class="container">
+
+                <div class="row g-4 text-center">
+
+                    <div class="col-6 col-lg-3">
+                        <div class="stat-card">
+
+                            <i class="bi bi-tags-fill"></i>
+
+                            <h3 class="stat-number stat-text" id="topGenre">
+                                -
+                            </h3>
+
+                            <p>Genere più presente</p>
+
+                        </div>
+                    </div>
+
+
+                    <div class="col-6 col-lg-3">
+                        <div class="stat-card">
+
+                            <i class="bi bi-star-fill"></i>
+
+                            <h3 class="stat-number" id="averageRating">
+                                -
+                            </h3>
+
+                            <p>Valutazione media</p>
+
+                        </div>
+                    </div>
+
+
+                    <div class="col-6 col-lg-3">
+                        <div class="stat-card">
+
+                            <i class="bi bi-calendar3"></i>
+
+                            <h3 class="stat-number" id="topYear">
+                                -
+                            </h3>
+
+                            <p>Anno più visto</p>
+
+                        </div>
+                    </div>
+
+
+                    <div class="col-6 col-lg-3">
+                        <div class="stat-card">
+
+                            <i class="bi bi-trophy-fill"></i>
+
+                            <h3 class="stat-number" id="filmsWith10">
+                                -
+                            </h3>
+
+                            <p>Film da 10</p>
+
+                        </div>
+                    </div>
+
+                </div>
+
+            </div>
+
+        </section>
+
+
+        <section class="intro-section">
+
+            <div class="container text-center">
+
+                <span class="section-label">CINEMA CHE GASA</span>
+
+                <h2>Il cinema, come piace a te.</h2>
+
+                <p class="section-description">
+                    Tutto il cinema che ami, raccolto in un unico posto.
+                    Cerca film, scopri nuovi titoli e tieni organizzata
+                    la tua collezione cinematografica.
+                </p>
+
+
+                <div class="row g-4 mt-4">
+
+                    <div class="col-md-4">
+
+                        <div class="feature-card">
+
+                            <i class="bi bi-search"></i>
+
+                            <h3>Cerca</h3>
+
+                            <p>
+                                Trova rapidamente il film che stai cercando.
+                            </p>
+
+                        </div>
+
+                    </div>
+
+
+                    <div class="col-md-4">
+
+                        <div class="feature-card">
+
+                            <i class="bi bi-film"></i>
+
+                            <h3>Scopri</h3>
+
+                            <p>
+                                Esplora film, generi e nuove pellicole
+                                da aggiungere alla tua lista.
+                            </p>
+
+                        </div>
+
+                    </div>
+
+
+                    <div class="col-md-4">
+
+                        <div class="feature-card">
+
+                            <i class="bi bi-star"></i>
+
+                            <h3>Valuta</h3>
+
+                            <p>
+                                Dai un voto ai film e costruisci
+                                la tua classifica personale.
+                            </p>
+
+                        </div>
+
+                    </div>
+
+                </div>
+
+            </div>
+
+        </section>
+
+
+        <section class="request-section">
+
+            <div class="container">
+
+                <div class="request-card">
+
+                    <i class="bi bi-film request-icon"></i>
+
+                    <span class="section-label">MANCANO DEI FILM?</span>
+
+                    <h2>Richiedi un film</h2>
+
+                    <p>
+                        Non trovi il film che cerchi?
+                        Scrivici il titolo e potremmo aggiungerlo
+                        a Cinema che Gasa.
+                    </p>
+
+
+                    <form
+                        action="https://api.web3forms.com/submit"
+                        method="POST"
+                        class="request-form"
+                    >
+
+                        <input
+                            type="hidden"
+                            name="access_key"
+                            value="03c29dd9-c296-4c9f-9e1c-804e6bc499d8"
+                        >
+
+                        <input
+                            type="hidden"
+                            name="subject"
+                            value="Nuova richiesta film - Cinema che Gasa"
+                        >
+
+                        <input
+                            type="hidden"
+                            name="from_name"
+                            value="Cinema che Gasa"
+                        >
+
+
+                        <div class="input-group">
+
+                            <input
+                                type="text"
+                                name="film"
+                                class="form-control"
+                                placeholder="Nome del film..."
+                                required
+                                maxlength="100"
+                            >
+
+                            <button type="submit" class="btn btn-light">
+                                <i class="bi bi-send"></i>
+                                Invia richiesta
+                            </button>
+
+                        </div>
+
+                    </form>
+
+                </div>
+
+            </div>
+
+        </section>
+
+
+        <footer>
+
+            <div class="container text-center">
+
+                <p>
+                    © <span id="currentYear"></span> Cinema che Gasa
+                </p>
+
+            </div>
+
+        </footer>
+
+
+        <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
+
+        <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+
+        <script src="js/supabase.js"></script>
+
+        <script src="js/app.js"></script>
+
+    </body>
+</html>

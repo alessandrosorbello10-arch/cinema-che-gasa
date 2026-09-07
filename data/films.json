@@ -1,0 +1,13 @@
+{
+    "id": 1,
+    "titolo": "Il sesto senso",
+    "anno": 1999,
+    "genere": "Thriller",
+    "generi": "Drammatico, Mistero, Thriller",
+    "voto": 10,
+    "visto": true,
+    "durata": "1h 47min",
+    "regista": "M. Night Shyamalan",
+    "immagine": "https://static.rogerebert.com/uploads/movie/movie_poster/the-sixth-sense-1999/large_35tAQaFHyhTAl3EBAXGgAlnory5.jpg",
+    "descrizione": "Uno psicologo infantile cerca di aiutare un bambino che sostiene di vedere persone morte."
+}
