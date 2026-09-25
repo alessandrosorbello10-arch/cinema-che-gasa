@@ -1,0 +1,128 @@
+<!DOCTYPE html>
+<html lang="it">
+	<head>
+		<meta charset="UTF-8">
+		<meta name="viewport" content="width=device-width, initial-scale=1.0">
+		<title>Cosa guardare? - Cinema che Gasa</title>
+		<link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet">
+		<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.min.css">
+		<link rel="stylesheet" href="../css/style.css">
+		<link rel="stylesheet" href="../css/cosa-guardare.css">
+	</head>
+	<body>
+		<nav class="navbar navbar-expand-lg navbar-dark fixed-top">
+			<div class="container-fluid px-4">
+				<a class="navbar-brand fw-bold" href="../index.html">Cinema che Gasa</a>
+				<a href="../index.html" class="btn btn-outline-light"><i class="bi bi-house"></i> Home</a>
+			</div>
+		</nav>
+
+		<main class="movie-picker-page">
+			<div class="movie-picker-container">
+				<section id="pickerStart" class="picker-screen active">
+					<span class="picker-label">CINEMA CHE GASA</span>
+					<h1>Cosa guardiamo<br><strong>stasera?</strong></h1>
+					<p>Non sai cosa scegliere? Lascia che sia il cinema a decidere.</p>
+					<button id="startButton" class="picker-main-button"><i class="bi bi-dice-5"></i> Inizia</button>
+				</section>
+
+				<section id="pickerQuestions" class="picker-screen">
+					<div class="picker-progress"><span id="questionNumber">1</span><span> / 4</span></div>
+
+					<div class="picker-question active" data-question="1">
+						<h2>Che genere vuoi?</h2>
+						<p>Scegli il genere che hai voglia di vedere.</p>
+						<div class="picker-options">
+							<button data-value="qualsiasi"><i class="bi bi-shuffle"></i>Qualsiasi</button>
+							<button data-value="azione"><i class="bi bi-fire"></i>Azione</button>
+							<button data-value="commedia"><i class="bi bi-emoji-laughing"></i>Commedia</button>
+							<button data-value="drammatico"><i class="bi bi-heart"></i>Drammatico</button>
+							<button data-value="horror"><i class="bi bi-eye"></i>Horror</button>
+							<button data-value="fantasy"><i class="bi bi-stars"></i>Fantasy</button>
+							<button data-value="fantascienza"><i class="bi bi-rocket"></i>Fantascienza</button>
+							<button data-value="animazione"><i class="bi bi-film"></i>Animazione</button>
+						</div>
+					</div>
+
+					<div class="picker-question" data-question="2">
+						<h2>Quanto deve essere apprezzato?</h2>
+						<p>Decidi il voto minimo che vuoi accettare.</p>
+						<div class="picker-options">
+							<button data-value="0">Qualsiasi voto</button>
+							<button data-value="6"><i class="bi bi-star"></i>6+</button>
+							<button data-value="7"><i class="bi bi-star-fill"></i>7+</button>
+							<button data-value="8"><i class="bi bi-stars"></i>8+</button>
+							<button data-value="9"><i class="bi bi-trophy"></i>9+</button>
+						</div>
+					</div>
+
+					<div class="picker-question" data-question="3">
+						<h2>Quanto tempo hai?</h2>
+						<p>Adattiamo la scelta alla tua serata.</p>
+						<div class="picker-options">
+							<button data-value="any"><i class="bi bi-infinity"></i>Non importa</button>
+							<button data-value="short"><i class="bi bi-hourglass-split"></i>Meno di 90 min</button>
+							<button data-value="normal"><i class="bi bi-clock"></i>90–120 min</button>
+							<button data-value="long"><i class="bi bi-moon-stars"></i>120+ min</button>
+						</div>
+					</div>
+
+					<div class="picker-question" data-question="4">
+						<h2>Quanto vuoi rischiare?</h2>
+						<p>Vuoi andare sul sicuro o lasciarti sorprendere?</p>
+						<div class="picker-options">
+							<button data-value="safe"><i class="bi bi-shield-check"></i>Vado sul sicuro</button>
+							<button data-value="balanced"><i class="bi bi-dice-5"></i>Una via di mezzo</button>
+							<button data-value="surprise"><i class="bi bi-stars"></i>Sorprendimi</button>
+						</div>
+					</div>
+
+					<div class="picker-navigation">
+						<button id="previousButton" class="btn btn-outline-light"><i class="bi bi-arrow-left"></i> Indietro</button>
+						<button id="nextButton" class="btn btn-light">Avanti <i class="bi bi-arrow-right"></i></button>
+					</div>
+				</section>
+
+				<section id="pickerLoading" class="picker-screen">
+					<div class="loading-icon"><i class="bi bi-film"></i></div>
+					<h2>Stiamo cercando qualcosa per te...</h2>
+					<p>Un momento.</p>
+					<div class="picker-loader"></div>
+				</section>
+
+				<section id="pickerResult" class="picker-screen">
+					<span class="picker-label">LA TUA SCELTA</span>
+					<div class="result-card">
+						<img id="resultImage" src="" alt="Locandina del film">
+						<div class="result-content">
+							<span id="resultYear"></span>
+							<h2 id="resultTitle">Film</h2>
+							<div class="result-meta">
+								<span id="resultGenre"></span>
+								<span><i class="bi bi-star-fill"></i> <span id="resultRating"></span></span>
+								<span><i class="bi bi-clock"></i> <span id="resultDuration"></span></span>
+							</div>
+							<p id="resultDescription"></p>
+							<div class="result-actions">
+								<a id="resultLink" href="#" class="btn btn-light"><i class="bi bi-play-circle"></i> Scopri il film</a>
+								<button id="retryButton" class="btn btn-outline-light"><i class="bi bi-dice-5"></i> Un altro</button>
+							</div>
+						</div>
+					</div>
+					<button id="restartButton" class="restart-button"><i class="bi bi-arrow-repeat"></i> Ricomincia</button>
+				</section>
+
+				<section id="pickerError" class="picker-screen">
+					<i class="bi bi-exclamation-triangle"></i>
+					<h2>Non abbiamo trovato film adatti.</h2>
+					<p>Prova a modificare qualche preferenza.</p>
+					<button id="errorRestartButton" class="picker-main-button"><i class="bi bi-arrow-repeat"></i> Riprova</button>
+				</section>
+			</div>
+		</main>
+
+		<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+		<script src="../js/supabase.js"></script>
+		<script src="../js/cosa-guardare.js"></script>
+	</body>
+</html>

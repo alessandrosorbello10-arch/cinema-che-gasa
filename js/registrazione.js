@@ -2,6 +2,7 @@ const registerForm = document.getElementById("registerForm");
 const registerMessage = document.getElementById("registerMessage");
 
 registerForm.addEventListener("submit", async event => {
+
 	event.preventDefault();
 
 	const email = document.getElementById("registerEmail").value.trim();
@@ -10,49 +11,116 @@ registerForm.addEventListener("submit", async event => {
 	const acceptPrivacy = document.getElementById("acceptPrivacy").checked;
 
 	if (!acceptTerms || !acceptPrivacy) {
-		registerMessage.textContent = "Devi accettare i Termini e la Privacy Policy per registrarti.";
-		registerMessage.className = "auth-message error";
+
+		registerMessage.textContent =
+			"Devi accettare i Termini e la Privacy Policy per registrarti.";
+
+		registerMessage.className =
+			"auth-message error";
+
 		return;
 	}
 
-	registerMessage.textContent = "Registrazione in corso...";
-	registerMessage.className = "auth-message";
+	registerMessage.textContent =
+		"Registrazione in corso...";
 
-	const acceptedAt = new Date().toISOString();
+	registerMessage.className =
+		"auth-message";
 
-	const { data, error } = await supabaseClient.auth.signUp({
-		email: email,
-		password: password
-	});
+	const acceptedAt =
+		new Date().toISOString();
+
+	const { data, error } =
+		await supabaseClient.auth.signUp({
+			email: email,
+			password: password,
+			options: {
+				data: {
+					terms_accepted_at: acceptedAt,
+					privacy_accepted_at: acceptedAt,
+					terms_version: "1.0",
+					privacy_version: "1.0"
+				}
+			}
+		});
 
 	if (error) {
-		registerMessage.textContent = "Errore: " + error.message;
-		registerMessage.className = "auth-message error";
+
+		const message =
+			error.message.toLowerCase();
+
+		if (
+			message.includes("already registered") ||
+			message.includes("already exists") ||
+			message.includes("user already") ||
+			message.includes("already been registered")
+		) {
+
+			registerMessage.innerHTML = `
+				<strong>Account già esistente.</strong>
+				<br>
+				Hai già un account con questa email.
+				<br><br>
+				<a href="login.html" class="btn btn-light">
+					<i class="bi bi-box-arrow-in-right"></i>
+					Vai al login
+				</a>
+			`;
+
+			registerMessage.className =
+				"auth-message error";
+
+			return;
+		}
+
+		registerMessage.textContent =
+			"Errore: " + error.message;
+
+		registerMessage.className =
+			"auth-message error";
+
 		return;
 	}
 
-	if (data.user) {
-		const { error: profileError } = await supabaseClient
-			.from("profiles")
-			.insert({
-				id: data.user.id,
-				email: email,
-				role: "user",
-				terms_accepted_at: acceptedAt,
-				privacy_accepted_at: acceptedAt,
-				terms_version: "1.0",
-				privacy_version: "1.0"
-			});
+	if (!data.user) {
 
-		if (profileError) {
-			console.error(profileError);
-			registerMessage.textContent = "Account creato, ma si è verificato un errore nel salvataggio delle preferenze.";
-			registerMessage.className = "auth-message error";
-			return;
-		}
+		registerMessage.textContent =
+			"Non è stato possibile creare l'account.";
+
+		registerMessage.className =
+			"auth-message error";
+
+		return;
 	}
 
-	registerMessage.textContent = "Registrazione completata! Controlla la tua email per confermare l'account.";
-	registerMessage.className = "auth-message success";
+	if (
+		data.user.identities &&
+		data.user.identities.length === 0
+	) {
+
+		registerMessage.innerHTML = `
+			<strong>Account già esistente.</strong>
+			<br>
+			Hai già un account con questa email.
+			<br><br>
+			<a href="login.html" class="btn btn-light">
+				<i class="bi bi-box-arrow-in-right"></i>
+				Vai al login
+			</a>
+		`;
+
+		registerMessage.className =
+			"auth-message error";
+
+		return;
+	}
+
+	registerMessage.textContent =
+		"Registrazione completata! Controlla la tua email per confermare l'account.";
+
+	registerMessage.className =
+		"auth-message success";
+
 	registerForm.reset();
+
 });

@@ -17,7 +17,15 @@
 
                 <a class="navbar-brand fw-bold" href="#">Cinema che Gasa</a>
 
-                <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#mainNavbar" aria-controls="mainNavbar" aria-expanded="false" aria-label="Apri menu">
+                <button
+                    class="navbar-toggler"
+                    type="button"
+                    data-bs-toggle="collapse"
+                    data-bs-target="#mainNavbar"
+                    aria-controls="mainNavbar"
+                    aria-expanded="false"
+                    aria-label="Apri menu"
+                >
                     <span class="navbar-toggler-icon"></span>
                 </button>
 
@@ -44,6 +52,12 @@
                         </li>
 
                         <li class="nav-item">
+                            <a href="pagine/cosa-guardare.html" class="nav-link">
+                                <i class="bi bi-dice-5"></i> Cosa guardare?
+                            </a>
+                        </li>
+
+                        <li class="nav-item">
                             <a class="nav-link" href="pagine/classifiche.html">
                                 <i class="bi bi-trophy"></i> Classifiche
                             </a>
@@ -52,13 +66,22 @@
                     </ul>
 
                     <div class="d-flex gap-2" id="accountArea">
-                        <a href="pagine/login.html" class="btn btn-outline-light">
-                            <i class="bi bi-box-arrow-in-right"></i> Accedi
+
+                        <a
+                            href="pagine/login.html"
+                            class="btn btn-outline-light"
+                        >
+                            <i class="bi bi-box-arrow-in-right"></i>
+                            Accedi
                         </a>
 
-                        <a href="pagine/registrazione.html" class="btn btn-light">
+                        <a
+                            href="pagine/registrazione.html"
+                            class="btn btn-light"
+                        >
                             Registrati
                         </a>
+
                     </div>
 
                 </div>
@@ -66,11 +89,22 @@
         </nav>
 
 
-        <section id="heroCarousel" class="carousel slide" data-bs-ride="carousel" data-bs-interval="3000">
+        <section
+            id="heroCarousel"
+            class="carousel slide"
+            data-bs-ride="carousel"
+            data-bs-interval="3000"
+        >
 
-            <div class="carousel-indicators" id="heroIndicators"></div>
+            <div
+                class="carousel-indicators"
+                id="heroIndicators"
+            ></div>
 
-            <div class="carousel-inner" id="heroSlides">
+            <div
+                class="carousel-inner"
+                id="heroSlides"
+            >
 
                 <div class="carousel-item active">
 
@@ -84,12 +118,16 @@
 
                     <div class="hero-content">
 
-                        <span class="hero-label">FILM IN EVIDENZA</span>
+                        <span class="hero-label">
+                            FILM IN EVIDENZA
+                        </span>
 
                         <h1>Caricamento...</h1>
 
                         <p class="hero-info">
-                            2026 <span>•</span> La tua valutazione:
+                            2026
+                            <span>•</span>
+                            La tua valutazione:
                             <strong>-/10</strong>
                         </p>
 
@@ -97,11 +135,16 @@
                             Stiamo caricando i film più recenti...
                         </p>
 
-                        <a href="#" class="btn btn-light btn-lg">
-                            <i class="bi bi-play-fill"></i> Scopri il film
+                        <a
+                            href="#"
+                            class="btn btn-light btn-lg"
+                        >
+                            <i class="bi bi-play-fill"></i>
+                            Scopri il film
                         </a>
 
                     </div>
+
                 </div>
 
             </div>
@@ -135,63 +178,144 @@
                 <div class="row g-4 text-center">
 
                     <div class="col-6 col-lg-3">
+
                         <div class="stat-card">
 
                             <i class="bi bi-tags-fill"></i>
 
-                            <h3 class="stat-number stat-text" id="topGenre">
+                            <h3
+                                class="stat-number stat-text"
+                                id="topGenre"
+                            >
                                 -
                             </h3>
 
-                            <p>Genere più presente</p>
+                            <p>
+                                Genere più presente
+                            </p>
 
                         </div>
+
                     </div>
 
 
                     <div class="col-6 col-lg-3">
+
                         <div class="stat-card">
 
                             <i class="bi bi-star-fill"></i>
 
-                            <h3 class="stat-number" id="averageRating">
+                            <h3
+                                class="stat-number"
+                                id="averageRating"
+                            >
                                 -
                             </h3>
 
-                            <p>Valutazione media</p>
+                            <p>
+                                Valutazione media
+                            </p>
 
                         </div>
+
                     </div>
 
 
                     <div class="col-6 col-lg-3">
+
                         <div class="stat-card">
 
                             <i class="bi bi-calendar3"></i>
 
-                            <h3 class="stat-number" id="topYear">
+                            <h3
+                                class="stat-number"
+                                id="topYear"
+                            >
                                 -
                             </h3>
 
-                            <p>Anno più visto</p>
+                            <p>
+                                Anno più visto
+                            </p>
 
                         </div>
+
                     </div>
 
 
                     <div class="col-6 col-lg-3">
+
                         <div class="stat-card">
 
                             <i class="bi bi-trophy-fill"></i>
 
-                            <h3 class="stat-number" id="filmsWith10">
+                            <h3
+                                class="stat-number"
+                                id="filmsWith10"
+                            >
                                 -
                             </h3>
 
-                            <p>Film da 10</p>
+                            <p>
+                                Film da 10
+                            </p>
 
                         </div>
+
                     </div>
+
+                </div>
+
+            </div>
+
+        </section>
+
+
+        <!-- I PIÙ CONSIGLIATI -->
+
+        <section class="home-recommendations">
+
+            <div class="container">
+
+                <div class="recommendations-header">
+
+                    <span class="section-label">
+                        I FILM PIÙ VOTATI
+                    </span>
+
+                    <h2>
+                        I più consigliati
+                    </h2>
+
+                </div>
+
+
+                <div class="recommendations-carousel">
+
+                    <button
+                        id="recommendedPrev"
+                        class="recommendations-arrow"
+                        type="button"
+                        aria-label="Film precedenti"
+                    >
+                        <i class="bi bi-chevron-left"></i>
+                    </button>
+
+
+                    <div
+                        id="recommendedFilms"
+                        class="recommendations-track"
+                    ></div>
+
+
+                    <button
+                        id="recommendedNext"
+                        class="recommendations-arrow"
+                        type="button"
+                        aria-label="Film successivi"
+                    >
+                        <i class="bi bi-chevron-right"></i>
+                    </button>
 
                 </div>
 
@@ -204,9 +328,13 @@
 
             <div class="container text-center">
 
-                <span class="section-label">CINEMA CHE GASA</span>
+                <span class="section-label">
+                    CINEMA CHE GASA
+                </span>
 
-                <h2>Il cinema, come piace a te.</h2>
+                <h2>
+                    Il cinema, come piace a te.
+                </h2>
 
                 <p class="section-description">
                     Tutto il cinema che ami, raccolto in un unico posto.
@@ -223,7 +351,9 @@
 
                             <i class="bi bi-search"></i>
 
-                            <h3>Cerca</h3>
+                            <h3>
+                                Cerca
+                            </h3>
 
                             <p>
                                 Trova rapidamente il film che stai cercando.
@@ -240,7 +370,9 @@
 
                             <i class="bi bi-film"></i>
 
-                            <h3>Scopri</h3>
+                            <h3>
+                                Scopri
+                            </h3>
 
                             <p>
                                 Esplora film, generi e nuove pellicole
@@ -258,7 +390,9 @@
 
                             <i class="bi bi-star"></i>
 
-                            <h3>Valuta</h3>
+                            <h3>
+                                Valuta
+                            </h3>
 
                             <p>
                                 Dai un voto ai film e costruisci
@@ -284,9 +418,13 @@
 
                     <i class="bi bi-film request-icon"></i>
 
-                    <span class="section-label">MANCANO DEI FILM?</span>
+                    <span class="section-label">
+                        MANCANO DEI FILM?
+                    </span>
 
-                    <h2>Richiedi un film</h2>
+                    <h2>
+                        Richiedi un film
+                    </h2>
 
                     <p>
                         Non trovi il film che cerchi?
@@ -331,7 +469,10 @@
                                 maxlength="100"
                             >
 
-                            <button type="submit" class="btn btn-light">
+                            <button
+                                type="submit"
+                                class="btn btn-light"
+                            >
                                 <i class="bi bi-send"></i>
                                 Invia richiesta
                             </button>
@@ -352,27 +493,36 @@
             <div class="container text-center">
 
                 <p>
-                    © <span id="currentYear"></span> sito in fase di sviluppo - Cinema che Gasa
+                    ©
+                    <span id="currentYear"></span>
+                    sito in fase di sviluppo - Cinema che Gasa
                 </p>
 
             </div>
 
+
             <div class="footer-privacy">
+
                 <span class="footer-privacy-title">
-                    <i class="bi bi-shield-lock"></i> Privacy
+                    <i class="bi bi-shield-lock"></i>
+                    Privacy
                 </span>
 
                 <a href="privacy.html">
-                    <i class="bi bi-file-text"></i> Privacy Policy
+                    <i class="bi bi-file-text"></i>
+                    Privacy Policy
                 </a>
 
                 <a href="cookie.html">
-                    <i class="bi bi-cookie"></i> Cookie Policy
+                    <i class="bi bi-cookie"></i>
+                    Cookie Policy
                 </a>
 
                 <button id="manageCookies">
-                    <i class="bi bi-sliders"></i> Gestisci cookie
+                    <i class="bi bi-sliders"></i>
+                    Gestisci cookie
                 </button>
+
             </div>
 
         </footer>
@@ -384,6 +534,7 @@
 
         <script src="js/supabase.js"></script>
         <script src="js/cookie-consent.js"></script>
+        <script src="js/home-films.js"></script>
         <script src="js/app.js"></script>
 
     </body>
