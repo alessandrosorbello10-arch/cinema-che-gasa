@@ -1,0 +1,4 @@
+User-agent: *
+Allow: /
+
+Sitemap: https://alessandrosorbello10-arch.github.io/cinema-che-gasa/sitemap.xml

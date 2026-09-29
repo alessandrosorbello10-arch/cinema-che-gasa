@@ -131,3 +131,65 @@ async function checkAdmin() {
 }
 
 checkAdmin();
+
+const requestForm = document.getElementById("requestForm");
+const requestMessage = document.getElementById("requestMessage");
+const requestButton = document.getElementById("requestButton");
+
+if (requestForm) {
+	requestForm.addEventListener("submit", async (event) => {
+		event.preventDefault();
+
+		const originalButton = requestButton.innerHTML;
+
+		requestButton.disabled = true;
+		requestButton.innerHTML = `
+			<span class="spinner-border spinner-border-sm"></span>
+			Invio...
+		`;
+
+		requestMessage.textContent = "";
+		requestMessage.className = "";
+
+		try {
+			const formData = new FormData(requestForm);
+			const response = await fetch(
+				"https://api.web3forms.com/submit",
+				{
+					method: "POST",
+					headers: {
+						Accept: "application/json"
+					},
+					body: formData
+				}
+			);
+
+			const result = await response.json();
+
+			if (result.success) {
+				requestMessage.textContent =
+					"✓ Richiesta inviata correttamente!";
+				requestMessage.className =
+					"request-message success";
+
+				requestForm.reset();
+			} else {
+				requestMessage.textContent =
+					result.message ||
+					"Non è stato possibile inviare la richiesta.";
+				requestMessage.className =
+					"request-message error";
+			}
+		} catch (error) {
+			console.error("Errore richiesta film:", error);
+
+			requestMessage.textContent =
+				"Errore di connessione. Riprova tra poco.";
+			requestMessage.className =
+				"request-message error";
+		}
+
+		requestButton.disabled = false;
+		requestButton.innerHTML = originalButton;
+	});
+}
