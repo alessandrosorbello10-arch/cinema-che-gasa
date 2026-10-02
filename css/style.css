@@ -30,6 +30,13 @@ body {
 	transition: color 0.2s ease;
 }
 
+.site-logo {
+	width: 42px;
+	height: 42px;
+	object-fit: contain;
+	margin-right: 8px;
+}
+
 .navbar .nav-link:hover,
 .navbar .nav-link.active {
 	color: #fff;
@@ -2386,4 +2393,317 @@ footer p {
 .request-form button:disabled {
 	opacity: 0.7;
 	cursor: not-allowed;
+}
+
+.footer-contact {
+	display: flex;
+	justify-content: center;
+	align-items: center;
+	margin-top: 15px;
+}
+
+.footer-contact p {
+	margin: 0;
+}
+
+.contact-email {
+	color: #fff;
+	text-decoration: none;
+	transition: color 0.2s ease;
+}
+
+.contact-email:hover {
+	color: #e50914;
+	text-decoration: underline;
+}
+
+.contact-email i {
+	margin-right: 6px;
+}
+
+.cookie-content .contact-email,
+.privacy-content .contact-email {
+	color: #e50914;
+}
+
+.cookie-content .contact-email:hover,
+.privacy-content .contact-email:hover {
+	color: #fff;
+}
+
+/* =========================
+   FILM SALVATI
+========================= */
+
+.saved-films-page {
+	min-height: 70vh;
+	padding-top: 120px;
+	padding-bottom: 80px;
+}
+
+.saved-films-header {
+	text-align: center;
+	margin-bottom: 45px;
+}
+
+.saved-films-header h1 {
+	margin-top: 10px;
+	font-weight: 700;
+}
+
+.saved-films-header p {
+	margin-top: 10px;
+	color: #aaa;
+}
+
+.saved-films-grid {
+	margin-top: 20px;
+}
+
+/* =========================
+   CARD
+========================= */
+
+.saved-film-card {
+	height: 100%;
+	background: #1b1b1b;
+	border-radius: 10px;
+	overflow: hidden;
+	position: relative;
+	transition: transform 0.25s ease, box-shadow 0.25s ease;
+}
+
+.saved-film-card:hover {
+	transform: translateY(-6px);
+	box-shadow: 0 10px 30px rgba(0, 0, 0, 0.45);
+}
+
+.saved-film-card-link {
+	display: block;
+	color: inherit;
+	text-decoration: none;
+}
+
+.saved-film-card img {
+	width: 100%;
+	height: 360px;
+	object-fit: cover;
+	display: block;
+	background: #111;
+}
+
+.saved-film-card-info {
+	padding: 15px;
+}
+
+.saved-film-card-info h3 {
+	font-size: 1rem;
+	font-weight: 600;
+	margin: 0 0 7px;
+	white-space: nowrap;
+	overflow: hidden;
+	text-overflow: ellipsis;
+}
+
+.saved-film-card-info p {
+	margin: 0 0 8px;
+	color: #999;
+	font-size: 0.85rem;
+}
+
+.saved-film-card-info span {
+	font-size: 0.9rem;
+}
+
+.saved-film-card-info i {
+	color: #ffc107;
+	margin-right: 3px;
+}
+
+/* =========================
+   RIMUOVI
+========================= */
+
+.remove-saved-film {
+	margin: 0 15px 15px;
+	width: calc(100% - 30px);
+}
+
+.remove-saved-film:hover {
+	background: #b02a37;
+	border-color: #b02a37;
+}
+
+/* =========================
+   EMPTY STATE
+========================= */
+
+.saved-films-empty {
+	text-align: center;
+	padding: 80px 20px;
+	color: #aaa;
+}
+
+.saved-films-empty i {
+	font-size: 4rem;
+	color: #666;
+	display: block;
+	margin-bottom: 20px;
+}
+
+.saved-films-empty h2 {
+	color: #fff;
+	font-size: 1.6rem;
+	margin-bottom: 10px;
+}
+
+.saved-films-empty p {
+	margin-bottom: 20px;
+}
+
+/* =========================
+   LOGIN
+========================= */
+
+.saved-films-login {
+	text-align: center;
+	padding: 80px 20px;
+}
+
+.saved-films-login i {
+	font-size: 4rem;
+	color: #888;
+	display: block;
+	margin-bottom: 20px;
+}
+
+.saved-films-login h2 {
+	color: #fff;
+	font-size: 1.6rem;
+	margin-bottom: 10px;
+}
+
+.saved-films-login p {
+	color: #aaa;
+	margin-bottom: 25px;
+}
+
+/* =========================
+   RESPONSIVE
+========================= */
+
+@media (max-width: 992px) {
+
+	.saved-film-card img {
+		height: 320px;
+	}
+
+}
+
+@media (max-width: 768px) {
+
+	.saved-films-page {
+		padding-top: 100px;
+		padding-bottom: 60px;
+	}
+
+	.saved-films-header {
+		margin-bottom: 30px;
+	}
+
+	.saved-film-card img {
+		height: 300px;
+	}
+
+	.saved-film-card-info {
+		padding: 12px;
+	}
+
+	.saved-film-card-info h3 {
+		font-size: 0.95rem;
+	}
+
+}
+
+@media (max-width: 576px) {
+
+	.saved-film-card img {
+		height: 250px;
+	}
+
+	.saved-film-card-info h3 {
+		font-size: 0.85rem;
+	}
+
+	.saved-film-card-info p {
+		font-size: 0.75rem;
+	}
+
+	.saved-film-card-info span {
+		font-size: 0.8rem;
+	}
+
+	.remove-saved-film {
+		font-size: 0.8rem;
+	}
+
+}
+
+.account-area .dropdown-menu,
+#accountArea .dropdown-menu {
+	background: #1a1a1a;
+	border: 1px solid #333;
+	border-radius: 10px;
+	padding: 8px;
+	min-width: 220px;
+	box-shadow: 0 10px 30px rgba(0, 0, 0, 0.5);
+}
+
+.account-area .dropdown-item,
+#accountArea .dropdown-item {
+	color: #fff;
+	border-radius: 7px;
+	padding: 10px 12px;
+	transition: background 0.2s ease;
+}
+
+.account-area .dropdown-item:hover,
+#accountArea .dropdown-item:focus,
+#accountArea .dropdown-item:active {
+	background: #2a2a2a;
+	color: #fff;
+}
+
+#accountArea .dropdown-item i {
+	margin-right: 8px;
+}
+
+#accountArea .dropdown-divider {
+	border-color: #333;
+	margin: 6px 0;
+}
+
+#accountArea .dropdown-item.text-danger {
+	color: #ff4d4d !important;
+}
+
+#accountArea .dropdown-item.text-danger:hover {
+	background: rgba(229, 9, 20, 0.15);
+}
+
+#accountArea .dropdown-toggle {
+	max-width: 260px;
+	overflow: hidden;
+	text-overflow: ellipsis;
+	white-space: nowrap;
+}
+
+@media (max-width: 576px) {
+	#accountArea .dropdown-toggle {
+		max-width: 170px;
+	}
+
+	#accountArea .dropdown-menu {
+		min-width: 200px;
+	}
 }

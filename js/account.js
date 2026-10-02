@@ -16,6 +16,10 @@ const cookieButton =
 
 async function loadAccount() {
 
+	if (!accountEmail) {
+		return;
+	}
+
 	const {
 		data: { session },
 		error
@@ -28,11 +32,14 @@ async function loadAccount() {
 			error
 		);
 
-		accountMessage.textContent =
-			"Si è verificato un errore durante il caricamento dell'account.";
+		if (accountMessage) {
 
-		accountMessage.className =
-			"auth-message error";
+			accountMessage.textContent =
+				"Si è verificato un errore durante il caricamento dell'account.";
+
+			accountMessage.className =
+				"auth-message error";
+		}
 
 		return;
 	}
@@ -50,69 +57,94 @@ async function loadAccount() {
 }
 
 
-loadAccount();
+if (changePasswordButton) {
 
+	changePasswordButton.addEventListener(
+		"click",
+		async () => {
 
-changePasswordButton.addEventListener(
-	"click",
-	async () => {
+			const newPassword =
+				prompt(
+					"Inserisci la nuova password:"
+				);
 
-		const newPassword =
-			prompt(
-				"Inserisci la nuova password:"
-			);
+			if (newPassword === null) {
+				return;
+			}
 
-		if (newPassword === null) {
-			return;
-		}
+			if (newPassword.length < 6) {
 
-		if (newPassword.length < 6) {
+				accountMessage.textContent =
+					"La password deve contenere almeno 6 caratteri.";
+
+				accountMessage.className =
+					"auth-message error";
+
+				return;
+			}
+
+			const confirmPassword =
+				prompt(
+					"Conferma la nuova password:"
+				);
+
+			if (confirmPassword === null) {
+				return;
+			}
+
+			if (newPassword !== confirmPassword) {
+
+				accountMessage.textContent =
+					"Le password non coincidono.";
+
+				accountMessage.className =
+					"auth-message error";
+
+				return;
+			}
+
+			changePasswordButton.disabled =
+				true;
 
 			accountMessage.textContent =
-				"La password deve contenere almeno 6 caratteri.";
+				"Modifica password in corso...";
 
 			accountMessage.className =
-				"auth-message error";
+				"auth-message";
 
-			return;
-		}
+			try {
 
-		const confirmPassword =
-			prompt(
-				"Conferma la nuova password:"
-			);
+				const {
+					error
+				} =
+					await supabaseClient.auth.updateUser({
+						password:
+							newPassword
+					});
 
-		if (confirmPassword === null) {
-			return;
-		}
+				if (error) {
 
-		if (newPassword !== confirmPassword) {
+					console.error(
+						"Errore cambio password:",
+						error
+					);
 
-			accountMessage.textContent =
-				"Le password non coincidono.";
+					accountMessage.textContent =
+						"Non è stato possibile cambiare la password.";
 
-			accountMessage.className =
-				"auth-message error";
+					accountMessage.className =
+						"auth-message error";
 
-			return;
-		}
+					return;
+				}
 
-		changePasswordButton.disabled = true;
+				accountMessage.textContent =
+					"Password modificata con successo.";
 
-		accountMessage.textContent =
-			"Modifica password in corso...";
+				accountMessage.className =
+					"auth-message success";
 
-		accountMessage.className =
-			"auth-message";
-
-		try {
-
-			const { error } =
-				await supabaseClient.auth.updateUser({
-					password: newPassword
-				});
-
-			if (error) {
+			} catch (error) {
 
 				console.error(
 					"Errore cambio password:",
@@ -120,101 +152,173 @@ changePasswordButton.addEventListener(
 				);
 
 				accountMessage.textContent =
-					"Non è stato possibile cambiare la password.";
+					"Si è verificato un errore durante il cambio della password.";
 
 				accountMessage.className =
 					"auth-message error";
 
+			} finally {
+
+				changePasswordButton.disabled =
+					false;
+			}
+		}
+	);
+}
+
+
+if (cookieButton) {
+
+	cookieButton.addEventListener(
+		"click",
+		() => {
+
+			if (
+				typeof openCookieSettings ===
+				"function"
+			) {
+
+				openCookieSettings();
+
+			} else {
+
+				accountMessage.textContent =
+					"Impossibile aprire le preferenze dei cookie.";
+
+				accountMessage.className =
+					"auth-message error";
+			}
+		}
+	);
+}
+
+
+if (deleteAccountButton) {
+
+	deleteAccountButton.addEventListener(
+		"click",
+		async () => {
+
+			const confirmed =
+				confirm(
+					"Sei sicuro di voler eliminare definitivamente il tuo account?\n\nQuesta operazione non può essere annullata."
+				);
+
+			if (!confirmed) {
 				return;
 			}
 
-			accountMessage.textContent =
-				"Password modificata con successo.";
+			deleteAccountButton.disabled =
+				true;
 
-			accountMessage.className =
-				"auth-message success";
+			if (changePasswordButton) {
+				changePasswordButton.disabled =
+					true;
+			}
 
-		} catch (error) {
-
-			console.error(
-				"Errore cambio password:",
-				error
-			);
-
-			accountMessage.textContent =
-				"Si è verificato un errore durante il cambio della password.";
-
-			accountMessage.className =
-				"auth-message error";
-
-		} finally {
-
-			changePasswordButton.disabled = false;
-
-		}
-	}
-);
-
-
-cookieButton.addEventListener(
-	"click",
-	() => {
-
-		if (
-			typeof openCookieSettings ===
-			"function"
-		) {
-
-			openCookieSettings();
-
-		} else {
+			if (cookieButton) {
+				cookieButton.disabled =
+					true;
+			}
 
 			accountMessage.textContent =
-				"Impossibile aprire le preferenze dei cookie.";
+				"Eliminazione account in corso...";
 
 			accountMessage.className =
-				"auth-message error";
+				"auth-message";
 
-		}
-	}
-);
+			try {
 
+				const {
+					data,
+					error
+				} =
+					await supabaseClient.functions.invoke(
+						"delete-account"
+					);
 
-deleteAccountButton.addEventListener(
-	"click",
-	async () => {
+				if (error) {
 
-		const confirmed =
-			confirm(
-				"Sei sicuro di voler eliminare definitivamente il tuo account?\n\nQuesta operazione non può essere annullata."
-			);
+					console.error(
+						"Errore eliminazione account:",
+						error
+					);
 
-		if (!confirmed) {
-			return;
-		}
+					accountMessage.textContent =
+						"Non è stato possibile eliminare l'account.";
 
-		deleteAccountButton.disabled = true;
+					accountMessage.className =
+						"auth-message error";
 
-		changePasswordButton.disabled = true;
-		cookieButton.disabled = true;
+					deleteAccountButton.disabled =
+						false;
 
-		accountMessage.textContent =
-			"Eliminazione account in corso...";
+					if (changePasswordButton) {
+						changePasswordButton.disabled =
+							false;
+					}
 
-		accountMessage.className =
-			"auth-message";
+					if (cookieButton) {
+						cookieButton.disabled =
+							false;
+					}
 
-		try {
+					return;
+				}
 
-			const {
-				data,
-				error
-			} =
-				await supabaseClient.functions.invoke(
-					"delete-account"
+				if (
+					!data ||
+					data.success !== true
+				) {
+
+					console.error(
+						"Risposta inattesa:",
+						data
+					);
+
+					accountMessage.textContent =
+						"Non è stato possibile eliminare l'account.";
+
+					accountMessage.className =
+						"auth-message error";
+
+					deleteAccountButton.disabled =
+						false;
+
+					if (changePasswordButton) {
+						changePasswordButton.disabled =
+							false;
+					}
+
+					if (cookieButton) {
+						cookieButton.disabled =
+							false;
+					}
+
+					return;
+				}
+
+				await supabaseClient.auth.signOut();
+
+				localStorage.removeItem(
+					"cinemaCheGasaCookieConsent"
 				);
 
-			if (error) {
+				accountMessage.textContent =
+					"Account eliminato. Reindirizzamento...";
+
+				accountMessage.className =
+					"auth-message success";
+
+				setTimeout(
+					() => {
+						window.location.href =
+							"../index.html";
+					},
+					1000
+				);
+
+			} catch (error) {
 
 				console.error(
 					"Errore eliminazione account:",
@@ -222,7 +326,7 @@ deleteAccountButton.addEventListener(
 				);
 
 				accountMessage.textContent =
-					"Non è stato possibile eliminare l'account.";
+					"Si è verificato un errore durante l'eliminazione dell'account.";
 
 				accountMessage.className =
 					"auth-message error";
@@ -230,84 +334,36 @@ deleteAccountButton.addEventListener(
 				deleteAccountButton.disabled =
 					false;
 
-				changePasswordButton.disabled =
-					false;
+				if (changePasswordButton) {
+					changePasswordButton.disabled =
+						false;
+				}
 
-				cookieButton.disabled =
-					false;
-
-				return;
+				if (cookieButton) {
+					cookieButton.disabled =
+						false;
+				}
 			}
+		}
+	);
+}
 
-			if (
-				!data ||
-				data.success !== true
-			) {
 
-				console.error(
-					"Risposta inattesa:",
-					data
-				);
+document.addEventListener(
+	"DOMContentLoaded",
+	() => {
 
-				accountMessage.textContent =
-					"Non è stato possibile eliminare l'account.";
+		loadAccount();
 
-				accountMessage.className =
-					"auth-message error";
-
-				deleteAccountButton.disabled =
-					false;
-
-				changePasswordButton.disabled =
-					false;
-
-				cookieButton.disabled =
-					false;
-
-				return;
-			}
-
-			await supabaseClient.auth.signOut();
-
-			localStorage.removeItem(
-				"cinemaCheGasaCookieConsent"
+		const currentYear =
+			document.getElementById(
+				"currentYear"
 			);
 
-			accountMessage.textContent =
-				"Account eliminato. Reindirizzamento...";
+		if (currentYear) {
 
-			accountMessage.className =
-				"auth-message success";
-
-			setTimeout(
-				() => {
-					window.location.href =
-						"../index.html";
-				},
-				1000
-			);
-
-		} catch (error) {
-
-			console.error(
-				"Errore eliminazione account:",
-				error
-			);
-
-			accountMessage.textContent =
-				"Si è verificato un errore durante l'eliminazione dell'account.";
-
-			accountMessage.className =
-				"auth-message error";
-
-			deleteAccountButton.disabled =
-				false;
-
-			changePasswordButton.disabled =
-				false;
-
-			cookieButton.disabled =
-				false;
+			currentYear.textContent =
+				new Date().getFullYear();
 		}
 	}
 );

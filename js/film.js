@@ -1,17 +1,45 @@
 const filmsContainer = document.getElementById("filmsContainer");
-
 const filmSearch = document.getElementById("filmSearch");
-
 const genreFilter = document.getElementById("genreFilter");
-
 const yearFilter = document.getElementById("yearFilter");
-
 const ratingFilter = document.getElementById("ratingFilter");
 
 let films = [];
 
-async function loadFilms() {
+// Genera un ordine casuale diverso per ogni giorno
+function dailyShuffle(array) {
+    const shuffled = [...array];
 
+    const today = new Date();
+    const dateString =
+        today.getFullYear() +
+        "-" +
+        String(today.getMonth() + 1).padStart(2, "0") +
+        "-" +
+        String(today.getDate()).padStart(2, "0");
+
+    let seed = 0;
+
+    for (let i = 0; i < dateString.length; i++) {
+        seed = (seed * 31 + dateString.charCodeAt(i)) >>> 0;
+    }
+
+    function random() {
+        seed = (seed * 1664525 + 1013904223) >>> 0;
+        return seed / 4294967296;
+    }
+
+    for (let i = shuffled.length - 1; i > 0; i--) {
+        const j = Math.floor(random() * (i + 1));
+
+        [shuffled[i], shuffled[j]] =
+            [shuffled[j], shuffled[i]];
+    }
+
+    return shuffled;
+}
+
+async function loadFilms() {
     const {
         data,
         error
@@ -23,21 +51,19 @@ async function loadFilms() {
         });
 
     if (error) {
-
         console.error(
             "Errore nel caricamento dei film:",
             error
         );
 
         showFilmNotFound();
-
         return;
     }
 
-    films = data || [];
+    // Ordine casuale che cambia ogni giorno
+    films = dailyShuffle(data || []);
 
     populateGenres();
-
     populateYears();
 
     const params =
@@ -47,28 +73,25 @@ async function loadFilms() {
         params.get("genre");
 
     if (selectedGenre) {
-
         const matchingFilms =
             films.filter(film => {
-
                 const filmGenres = (
                     film.generi ||
                     film.genre ||
                     ""
                 )
                     .split(",")
-                    .map(genre => genre.trim().toLowerCase());
+                    .map(genre =>
+                        genre.trim().toLowerCase()
+                    );
 
                 return filmGenres.includes(
                     selectedGenre.toLowerCase()
                 );
-
             });
 
         if (!matchingFilms.length) {
-
             showFilmNotFound();
-
             return;
         }
 
@@ -88,15 +111,17 @@ async function loadFilms() {
 }
 
 function showFilmNotFound() {
-
     filmsContainer.innerHTML = `
         <div class="col-12">
             <div class="empty-films">
                 <i class="bi bi-film"></i>
+
                 <h2>Film non trovato</h2>
+
                 <p>
                     Non ci sono film disponibili per questo genere.
                 </p>
+
                 <button
                     type="button"
                     class="btn btn-light mt-3"
@@ -108,15 +133,12 @@ function showFilmNotFound() {
             </div>
         </div>
     `;
-
 }
 
 function populateGenres() {
-
     const genres = new Set();
 
     films.forEach(film => {
-
         const filmGenres =
             film.generi ||
             film.genre ||
@@ -129,7 +151,6 @@ function populateGenres() {
             .forEach(genre => {
                 genres.add(genre);
             });
-
     });
 
     genreFilter.innerHTML = `
@@ -141,27 +162,21 @@ function populateGenres() {
             a.localeCompare(b, "it")
         )
         .forEach(genre => {
-
             genreFilter.innerHTML += `
                 <option value="${genre}">
                     ${genre}
                 </option>
             `;
-
         });
-
 }
 
 function populateYears() {
-
     const years = new Set();
 
     films.forEach(film => {
-
         if (film.year) {
             years.add(film.year);
         }
-
     });
 
     yearFilter.innerHTML = `
@@ -171,19 +186,15 @@ function populateYears() {
     [...years]
         .sort((a, b) => b - a)
         .forEach(year => {
-
             yearFilter.innerHTML += `
                 <option value="${year}">
                     ${year}
                 </option>
             `;
-
         });
-
 }
 
 function applyFilters() {
-
     const search =
         filmSearch.value
             .trim()
@@ -200,7 +211,6 @@ function applyFilters() {
 
     const filteredFilms =
         films.filter(film => {
-
             const title =
                 (film.title || "")
                     .toLowerCase();
@@ -244,42 +254,32 @@ function applyFilters() {
                 matchesYear &&
                 matchesRating
             );
-
         });
 
     displayFilms(filteredFilms);
-
 }
 
 function displayFilms(filteredFilms) {
-
     if (!filteredFilms.length) {
-
         showFilmNotFound();
-
         return;
     }
 
     filmsContainer.innerHTML =
         filteredFilms.map(film => {
-
             return `
                 <div class="col-6 col-md-4 col-lg-3">
-
                     <a
                         href="film-dettaglio.html?id=${film.id}"
                         class="film-card-link"
                     >
-
                         <div class="film-card">
-
                             <img
                                 src="${film.image || ""}"
                                 alt="${film.title || "Film"}"
                             >
 
                             <div class="film-card-info">
-
                                 <h3>
                                     ${film.title || "Titolo sconosciuto"}
                                 </h3>
@@ -293,18 +293,12 @@ function displayFilms(filteredFilms) {
                                     <i class="bi bi-star-fill"></i>
                                     ${film.rating ?? "—"}/10
                                 </span>
-
                             </div>
-
                         </div>
-
                     </a>
-
                 </div>
             `;
-
         }).join("");
-
 }
 
 filmSearch.addEventListener(

@@ -12,6 +12,7 @@
         >
 
         <title>Cookie Policy - Cinema che Gasa</title>
+        <link rel="icon" type="image/png" href="img/logo_cinema-che-gasa.png">
 
         <link
             rel="stylesheet"
@@ -209,10 +210,52 @@
             </p>
 
             <p>
-                <strong>Email:</strong>
-                <a href="mailto:cinemachegasa.supporto@gmail.com">
+                <a
+                    href="https://mail.google.com/"
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    class="contact-email"
+                    data-email="cinemachegasa.supporto@gmail.com"
+                >
                     cinemachegasa.supporto@gmail.com
                 </a>
+            </p>
+
+            <h2>10. Email di supporto</h2>
+
+            <p>
+                Per qualsiasi domanda, richiesta o segnalazione relativa
+                ai cookie e alla privacy del sito, puoi contattarci
+                all'indirizzo:
+            </p>
+
+            <p>
+                <a
+                    href="https://mail.google.com/"
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    class="contact-email"
+                    data-email="cinemachegasa.supporto@gmail.com"
+                >
+                    cinemachegasa.supporto@gmail.com
+                </a>
+            </p>
+
+            <p>
+                Nell'email è consigliato indicare in modo chiaro
+                l'argomento della richiesta e spiegare brevemente
+                il problema o l'informazione di cui hai bisogno.
+            </p>
+
+            <p>
+                Ad esempio, puoi scrivere nell'oggetto:
+                <strong>Richiesta informazioni sui cookie</strong>
+            </p>
+
+            <p>
+                Nel testo dell'email descrivi invece la tua richiesta
+                in modo semplice e specifico. Non inserire dati personali
+                non necessari per la gestione della richiesta.
             </p>
 
 
@@ -241,6 +284,23 @@
 
 
         <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.8/dist/js/bootstrap.bundle.min.js"></script>
+
+        <script>
+        document.querySelectorAll(".contact-email").forEach((email) => {
+            email.addEventListener("click", async () => {
+                try {
+                    await navigator.clipboard.writeText(
+                        email.dataset.email
+                    );
+                } catch (error) {
+                    console.error(
+                        "Errore copia email:",
+                        error
+                    );
+                }
+            });
+        });
+        </script>
 
     </body>
 

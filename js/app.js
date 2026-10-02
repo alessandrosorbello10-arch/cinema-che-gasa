@@ -1,58 +1,181 @@
-const currentYear = new Date().getFullYear();
+const currentYear =
+	new Date().getFullYear();
 
-const currentYearElement = document.getElementById("currentYear");
+const currentYearElement =
+	document.getElementById("currentYear");
 
 if (currentYearElement) {
-	currentYearElement.textContent = currentYear;
+	currentYearElement.textContent =
+		currentYear;
 }
 
-const accountArea = document.getElementById("accountArea");
+
+const accountArea =
+	document.getElementById("accountArea");
+
 
 async function updateAccountArea() {
-	if (!accountArea) return;
+
+	if (!accountArea) {
+		return;
+	}
 
 	try {
+
 		const {
 			data: { user }
 		} = await supabaseClient.auth.getUser();
 
-		if (!user) return;
-
 		const isInsidePagine =
-			window.location.pathname.includes("/pagine/");
+			window.location.pathname.includes(
+				"/pagine/"
+			);
 
-		const accountLink =
+		const pagesPath =
 			isInsidePagine
-				? "account.html"
-				: "pagine/account.html";
+				? ""
+				: "pagine/";
+
+		if (!user) {
+			return;
+		}
+
+		const {
+			data: profile,
+			error
+		} = await supabaseClient
+			.from("profiles")
+			.select("email, role")
+			.eq("id", user.id)
+			.maybeSingle();
+
+		if (error) {
+			console.error(
+				"Errore recupero profilo:",
+				error
+			);
+		}
+
+		const email =
+			profile?.email ||
+			user.email ||
+			"Account";
+
+		const role =
+			profile?.role ||
+			"user";
 
 		accountArea.innerHTML = `
-			<a
-				href="${accountLink}"
-				class="btn btn-outline-light account-email-button"
-			>
-				<i class="bi bi-person-circle"></i>
-				${user.email}
-			</a>
+			<div class="dropdown">
 
-			<button
-				id="logoutButton"
-				class="btn btn-light"
-			>
-				<i class="bi bi-box-arrow-right"></i>
-				Esci
-			</button>
+				<button
+					class="btn btn-outline-light dropdown-toggle"
+					type="button"
+					data-bs-toggle="dropdown"
+					aria-expanded="false"
+				>
+					<i class="bi bi-person-circle"></i>
+					${email}
+				</button>
+
+				<ul class="dropdown-menu dropdown-menu-end">
+
+					<li>
+						<a
+							class="dropdown-item"
+							href="${pagesPath}account.html"
+						>
+							<i class="bi bi-person"></i>
+							Il mio account
+						</a>
+					</li>
+
+					<li>
+						<a
+							class="dropdown-item"
+							href="${pagesPath}salvati.html"
+						>
+							<i class="bi bi-bookmark-fill"></i>
+							Film salvati
+						</a>
+					</li>
+
+					${role === "admin" ? `
+						<li>
+							<hr class="dropdown-divider">
+						</li>
+
+						<li>
+							<a
+								class="dropdown-item"
+								href="${pagesPath}admin.html"
+							>
+								<i class="bi bi-shield-lock"></i>
+								Pannello Admin
+							</a>
+						</li>
+					` : ""}
+
+					<li>
+						<hr class="dropdown-divider">
+					</li>
+
+					<li>
+						<button
+							id="logoutButton"
+							class="dropdown-item text-danger"
+							type="button"
+						>
+							<i class="bi bi-box-arrow-right"></i>
+							Esci
+						</button>
+					</li>
+
+				</ul>
+
+			</div>
 		`;
 
 		const logoutButton =
-			document.getElementById("logoutButton");
+			document.getElementById(
+				"logoutButton"
+			);
 
-		logoutButton.addEventListener("click", async () => {
-			await supabaseClient.auth.signOut();
-			window.location.reload();
-		});
+		if (logoutButton) {
+
+			logoutButton.addEventListener(
+				"click",
+				async () => {
+
+					logoutButton.disabled =
+						true;
+
+					const {
+						error
+					} =
+						await supabaseClient
+							.auth.signOut();
+
+					if (error) {
+
+						console.error(
+							"Errore logout:",
+							error
+						);
+
+						logoutButton.disabled =
+							false;
+
+						return;
+					}
+
+					window.location.reload();
+				}
+			);
+		}
 
 	} catch (error) {
+
 		console.error(
 			"Errore caricamento account:",
 			error
@@ -60,136 +183,115 @@ async function updateAccountArea() {
 	}
 }
 
+
 updateAccountArea();
 
-async function checkAdmin() {
-	if (!accountArea) return;
 
-	try {
-		const {
-			data: { user }
-		} = await supabaseClient.auth.getUser();
+const requestForm =
+	document.getElementById(
+		"requestForm"
+	);
 
-		if (!user) return;
+const requestMessage =
+	document.getElementById(
+		"requestMessage"
+	);
 
-		const {
-			data: profile,
-			error
-		} = await supabaseClient
-			.from("profiles")
-			.select("role")
-			.eq("id", user.id)
-			.single();
+const requestButton =
+	document.getElementById(
+		"requestButton"
+	);
 
-		if (error) {
-			console.error(
-				"Errore controllo admin:",
-				error
-			);
-			return;
-		}
-
-		if (profile && profile.role === "admin") {
-
-			if (
-				document.getElementById("adminButton")
-			) {
-				return;
-			}
-
-			const adminButton =
-				document.createElement("a");
-
-			const isInsidePagine =
-				window.location.pathname.includes("/pagine/");
-
-			adminButton.href =
-				isInsidePagine
-					? "admin.html"
-					: "pagine/admin.html";
-
-			adminButton.id =
-				"adminButton";
-
-			adminButton.className =
-				"btn btn-danger";
-
-			adminButton.innerHTML = `
-				<i class="bi bi-shield-lock"></i>
-				Pannello Admin
-			`;
-
-			accountArea.prepend(adminButton);
-		}
-
-	} catch (error) {
-		console.error(
-			"Errore controllo accesso admin:",
-			error
-		);
-	}
-}
-
-checkAdmin();
-
-const requestForm = document.getElementById("requestForm");
-const requestMessage = document.getElementById("requestMessage");
-const requestButton = document.getElementById("requestButton");
 
 if (requestForm) {
-	requestForm.addEventListener("submit", async (event) => {
-		event.preventDefault();
 
-		const originalButton = requestButton.innerHTML;
+	requestForm.addEventListener(
+		"submit",
+		async (event) => {
 
-		requestButton.disabled = true;
-		requestButton.innerHTML = `
-			<span class="spinner-border spinner-border-sm"></span>
-			Invio...
-		`;
+			event.preventDefault();
 
-		requestMessage.textContent = "";
-		requestMessage.className = "";
+			const originalButton =
+				requestButton.innerHTML;
 
-		try {
-			const formData = new FormData(requestForm);
-			const response = await fetch(
-				"https://api.web3forms.com/submit",
-				{
-					method: "POST",
-					headers: {
-						Accept: "application/json"
-					},
-					body: formData
+			requestButton.disabled =
+				true;
+
+			requestButton.innerHTML = `
+				<span
+					class="spinner-border spinner-border-sm"
+				></span>
+				Invio...
+			`;
+
+			requestMessage.textContent =
+				"";
+
+			requestMessage.className =
+				"";
+
+			try {
+
+				const formData =
+					new FormData(
+						requestForm
+					);
+
+				const response =
+					await fetch(
+						"https://api.web3forms.com/submit",
+						{
+							method: "POST",
+							headers: {
+								Accept:
+									"application/json"
+							},
+							body: formData
+						}
+					);
+
+				const result =
+					await response.json();
+
+				if (result.success) {
+
+					requestMessage.textContent =
+						"✓ Richiesta inviata correttamente!";
+
+					requestMessage.className =
+						"request-message success";
+
+					requestForm.reset();
+
+				} else {
+
+					requestMessage.textContent =
+						result.message ||
+						"Non è stato possibile inviare la richiesta.";
+
+					requestMessage.className =
+						"request-message error";
 				}
-			);
 
-			const result = await response.json();
+			} catch (error) {
 
-			if (result.success) {
+				console.error(
+					"Errore richiesta film:",
+					error
+				);
+
 				requestMessage.textContent =
-					"✓ Richiesta inviata correttamente!";
-				requestMessage.className =
-					"request-message success";
+					"Errore di connessione. Riprova tra poco.";
 
-				requestForm.reset();
-			} else {
-				requestMessage.textContent =
-					result.message ||
-					"Non è stato possibile inviare la richiesta.";
 				requestMessage.className =
 					"request-message error";
 			}
-		} catch (error) {
-			console.error("Errore richiesta film:", error);
 
-			requestMessage.textContent =
-				"Errore di connessione. Riprova tra poco.";
-			requestMessage.className =
-				"request-message error";
+			requestButton.disabled =
+				false;
+
+			requestButton.innerHTML =
+				originalButton;
 		}
-
-		requestButton.disabled = false;
-		requestButton.innerHTML = originalButton;
-	});
+	);
 }
