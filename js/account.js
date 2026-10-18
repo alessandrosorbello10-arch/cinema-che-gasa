@@ -1,369 +1,388 @@
-const accountEmail =
-	document.getElementById("accountEmail");
+const accountEmail = document.getElementById("accountEmail");
+const accountMessage = document.getElementById("accountMessage");
 
-const accountMessage =
-	document.getElementById("accountMessage");
+const deleteAccountButton = document.getElementById("deleteAccountButton");
+const changePasswordButton = document.getElementById("changePasswordButton");
+const cookieButton = document.getElementById("cookieButton");
 
-const deleteAccountButton =
-	document.getElementById("deleteAccountButton");
+const emailNotifications = document.getElementById("emailNotifications");
+const emailNotificationsMessage = document.getElementById("emailNotificationsMessage");
 
-const changePasswordButton =
-	document.getElementById("changePasswordButton");
+let currentUserId = null;
+let emailPreferenceLoaded = false;
 
-const cookieButton =
-	document.getElementById("cookieButton");
+function showAccountMessage(message, type = "") {
+    if (!accountMessage) {
+        return;
+    }
 
+    accountMessage.textContent = message;
+    accountMessage.className = "auth-message";
+
+    if (type) {
+        accountMessage.classList.add(type);
+    }
+}
+
+function showEmailMessage(message, type = "") {
+    if (!emailNotificationsMessage) {
+        return;
+    }
+
+    emailNotificationsMessage.textContent = message;
+    emailNotificationsMessage.className = "small mt-2 mb-0";
+
+    if (type === "success") {
+        emailNotificationsMessage.classList.add("text-success");
+    } else if (type === "error") {
+        emailNotificationsMessage.classList.add("text-danger");
+    }
+}
 
 async function loadAccount() {
+    if (!accountEmail) {
+        return;
+    }
 
-	if (!accountEmail) {
-		return;
-	}
+    const {
+        data: { session },
+        error
+    } = await supabaseClient.auth.getSession();
 
-	const {
-		data: { session },
-		error
-	} = await supabaseClient.auth.getSession();
+    if (error) {
+        console.error("Errore caricamento sessione:", error);
 
-	if (error) {
+        showAccountMessage(
+            "Si è verificato un errore durante il caricamento dell'account.",
+            "error"
+        );
 
-		console.error(
-			"Errore caricamento sessione:",
-			error
-		);
+        return;
+    }
 
-		if (accountMessage) {
+    if (!session) {
+        window.location.href = "login.html";
+        return;
+    }
 
-			accountMessage.textContent =
-				"Si è verificato un errore durante il caricamento dell'account.";
+    currentUserId = session.user.id;
 
-			accountMessage.className =
-				"auth-message error";
-		}
+    accountEmail.textContent = session.user.email;
 
-		return;
-	}
-
-	if (!session) {
-
-		window.location.href =
-			"login.html";
-
-		return;
-	}
-
-	accountEmail.textContent =
-		session.user.email;
+    await loadEmailPreference();
 }
 
+async function loadEmailPreference() {
+    if (!currentUserId || !emailNotifications) {
+        return;
+    }
+
+    emailNotifications.disabled = true;
+    emailPreferenceLoaded = false;
+
+    showEmailMessage("Caricamento preferenze...");
+
+    try {
+        const {
+            data: profile,
+            error
+        } = await supabaseClient
+            .from("profiles")
+            .select("email_notifications")
+            .eq("id", currentUserId)
+            .maybeSingle();
+
+        if (error) {
+            throw error;
+        }
+
+        if (!profile) {
+            throw new Error("Profilo utente non trovato.");
+        }
+
+        emailNotifications.checked =
+            profile.email_notifications === true;
+
+        emailPreferenceLoaded = true;
+        emailNotifications.disabled = false;
+
+        showEmailMessage(
+            emailNotifications.checked
+                ? "Riceverai le comunicazioni del sito."
+                : "Le comunicazioni via email sono disattivate."
+        );
+
+    } catch (error) {
+        console.error(
+            "Errore caricamento preferenze email:",
+            error
+        );
+
+        showEmailMessage(
+            "Impossibile caricare le preferenze. Ricarica la pagina.",
+            "error"
+        );
+    }
+}
+
+if (emailNotifications) {
+    emailNotifications.addEventListener("change", async () => {
+        if (!emailPreferenceLoaded || !currentUserId) {
+            return;
+        }
+
+        const newValue = emailNotifications.checked;
+
+        emailNotifications.disabled = true;
+
+        showEmailMessage("Salvataggio in corso...");
+
+        try {
+            const {
+                data,
+                error
+            } = await supabaseClient
+                .from("profiles")
+                .update({
+                    email_notifications: newValue
+                })
+                .eq("id", currentUserId)
+                .select("id")
+                .maybeSingle();
+
+            if (error) {
+                throw error;
+            }
+
+            if (!data) {
+                throw new Error(
+                    "Nessun profilo aggiornato. Verifica i permessi del database."
+                );
+            }
+
+            showEmailMessage(
+                newValue
+                    ? "Preferenza salvata. Hai attivato le comunicazioni email."
+                    : "Preferenza salvata. Hai disattivato le comunicazioni email.",
+                "success"
+            );
+
+        } catch (error) {
+            console.error(
+                "Errore salvataggio preferenze email:",
+                error
+            );
+
+            emailNotifications.checked = !newValue;
+
+            showEmailMessage(
+                "Non è stato possibile salvare la preferenza. Riprova.",
+                "error"
+            );
+
+        } finally {
+            emailNotifications.disabled = false;
+        }
+    });
+}
 
 if (changePasswordButton) {
+    changePasswordButton.addEventListener("click", async () => {
+        const newPassword = prompt(
+            "Inserisci la nuova password:"
+        );
 
-	changePasswordButton.addEventListener(
-		"click",
-		async () => {
+        if (newPassword === null) {
+            return;
+        }
 
-			const newPassword =
-				prompt(
-					"Inserisci la nuova password:"
-				);
+        if (newPassword.length < 6) {
+            showAccountMessage(
+                "La password deve contenere almeno 6 caratteri.",
+                "error"
+            );
 
-			if (newPassword === null) {
-				return;
-			}
+            return;
+        }
 
-			if (newPassword.length < 6) {
+        const confirmPassword = prompt(
+            "Conferma la nuova password:"
+        );
 
-				accountMessage.textContent =
-					"La password deve contenere almeno 6 caratteri.";
+        if (confirmPassword === null) {
+            return;
+        }
 
-				accountMessage.className =
-					"auth-message error";
+        if (newPassword !== confirmPassword) {
+            showAccountMessage(
+                "Le password non coincidono.",
+                "error"
+            );
 
-				return;
-			}
+            return;
+        }
 
-			const confirmPassword =
-				prompt(
-					"Conferma la nuova password:"
-				);
+        changePasswordButton.disabled = true;
 
-			if (confirmPassword === null) {
-				return;
-			}
+        showAccountMessage("Modifica password in corso...");
 
-			if (newPassword !== confirmPassword) {
+        try {
+            const { error } = await supabaseClient.auth.updateUser({
+                password: newPassword
+            });
 
-				accountMessage.textContent =
-					"Le password non coincidono.";
+            if (error) {
+                console.error("Errore cambio password:", error);
 
-				accountMessage.className =
-					"auth-message error";
+                showAccountMessage(
+                    "Non è stato possibile cambiare la password.",
+                    "error"
+                );
 
-				return;
-			}
+                return;
+            }
 
-			changePasswordButton.disabled =
-				true;
+            showAccountMessage(
+                "Password modificata con successo.",
+                "success"
+            );
 
-			accountMessage.textContent =
-				"Modifica password in corso...";
+        } catch (error) {
+            console.error("Errore cambio password:", error);
 
-			accountMessage.className =
-				"auth-message";
+            showAccountMessage(
+                "Si è verificato un errore durante il cambio della password.",
+                "error"
+            );
 
-			try {
-
-				const {
-					error
-				} =
-					await supabaseClient.auth.updateUser({
-						password:
-							newPassword
-					});
-
-				if (error) {
-
-					console.error(
-						"Errore cambio password:",
-						error
-					);
-
-					accountMessage.textContent =
-						"Non è stato possibile cambiare la password.";
-
-					accountMessage.className =
-						"auth-message error";
-
-					return;
-				}
-
-				accountMessage.textContent =
-					"Password modificata con successo.";
-
-				accountMessage.className =
-					"auth-message success";
-
-			} catch (error) {
-
-				console.error(
-					"Errore cambio password:",
-					error
-				);
-
-				accountMessage.textContent =
-					"Si è verificato un errore durante il cambio della password.";
-
-				accountMessage.className =
-					"auth-message error";
-
-			} finally {
-
-				changePasswordButton.disabled =
-					false;
-			}
-		}
-	);
+        } finally {
+            changePasswordButton.disabled = false;
+        }
+    });
 }
-
 
 if (cookieButton) {
-
-	cookieButton.addEventListener(
-		"click",
-		() => {
-
-			if (
-				typeof openCookieSettings ===
-				"function"
-			) {
-
-				openCookieSettings();
-
-			} else {
-
-				accountMessage.textContent =
-					"Impossibile aprire le preferenze dei cookie.";
-
-				accountMessage.className =
-					"auth-message error";
-			}
-		}
-	);
+    cookieButton.addEventListener("click", () => {
+        if (typeof openCookieSettings === "function") {
+            openCookieSettings();
+        } else {
+            showAccountMessage(
+                "Impossibile aprire le preferenze dei cookie.",
+                "error"
+            );
+        }
+    });
 }
-
 
 if (deleteAccountButton) {
+    deleteAccountButton.addEventListener("click", async () => {
+        const confirmed = confirm(
+            "Sei sicuro di voler eliminare definitivamente il tuo account?\n\nQuesta operazione non può essere annullata."
+        );
 
-	deleteAccountButton.addEventListener(
-		"click",
-		async () => {
+        if (!confirmed) {
+            return;
+        }
 
-			const confirmed =
-				confirm(
-					"Sei sicuro di voler eliminare definitivamente il tuo account?\n\nQuesta operazione non può essere annullata."
-				);
+        deleteAccountButton.disabled = true;
 
-			if (!confirmed) {
-				return;
-			}
+        if (changePasswordButton) {
+            changePasswordButton.disabled = true;
+        }
 
-			deleteAccountButton.disabled =
-				true;
+        if (cookieButton) {
+            cookieButton.disabled = true;
+        }
 
-			if (changePasswordButton) {
-				changePasswordButton.disabled =
-					true;
-			}
+        if (emailNotifications) {
+            emailNotifications.disabled = true;
+        }
 
-			if (cookieButton) {
-				cookieButton.disabled =
-					true;
-			}
+        showAccountMessage("Eliminazione account in corso...");
 
-			accountMessage.textContent =
-				"Eliminazione account in corso...";
+        try {
+            const {
+                data,
+                error
+            } = await supabaseClient.functions.invoke(
+                "delete-account"
+            );
 
-			accountMessage.className =
-				"auth-message";
+            if (error) {
+                console.error(
+                    "Errore eliminazione account:",
+                    error
+                );
 
-			try {
+                showAccountMessage(
+                    "Non è stato possibile eliminare l'account.",
+                    "error"
+                );
 
-				const {
-					data,
-					error
-				} =
-					await supabaseClient.functions.invoke(
-						"delete-account"
-					);
+                return;
+            }
 
-				if (error) {
+            if (!data || data.success !== true) {
+                console.error("Risposta inattesa:", data);
 
-					console.error(
-						"Errore eliminazione account:",
-						error
-					);
+                showAccountMessage(
+                    "Non è stato possibile eliminare l'account.",
+                    "error"
+                );
 
-					accountMessage.textContent =
-						"Non è stato possibile eliminare l'account.";
+                return;
+            }
 
-					accountMessage.className =
-						"auth-message error";
+            await supabaseClient.auth.signOut();
 
-					deleteAccountButton.disabled =
-						false;
+            localStorage.removeItem(
+                "cinemaCheGasaCookieConsent"
+            );
 
-					if (changePasswordButton) {
-						changePasswordButton.disabled =
-							false;
-					}
+            showAccountMessage(
+                "Account eliminato. Reindirizzamento...",
+                "success"
+            );
 
-					if (cookieButton) {
-						cookieButton.disabled =
-							false;
-					}
+            setTimeout(() => {
+                window.location.href = "../index.html";
+            }, 1000);
 
-					return;
-				}
+        } catch (error) {
+            console.error(
+                "Errore eliminazione account:",
+                error
+            );
 
-				if (
-					!data ||
-					data.success !== true
-				) {
+            showAccountMessage(
+                "Si è verificato un errore durante l'eliminazione dell'account.",
+                "error"
+            );
 
-					console.error(
-						"Risposta inattesa:",
-						data
-					);
+        } finally {
+            deleteAccountButton.disabled = false;
 
-					accountMessage.textContent =
-						"Non è stato possibile eliminare l'account.";
+            if (changePasswordButton) {
+                changePasswordButton.disabled = false;
+            }
 
-					accountMessage.className =
-						"auth-message error";
+            if (cookieButton) {
+                cookieButton.disabled = false;
+            }
 
-					deleteAccountButton.disabled =
-						false;
-
-					if (changePasswordButton) {
-						changePasswordButton.disabled =
-							false;
-					}
-
-					if (cookieButton) {
-						cookieButton.disabled =
-							false;
-					}
-
-					return;
-				}
-
-				await supabaseClient.auth.signOut();
-
-				localStorage.removeItem(
-					"cinemaCheGasaCookieConsent"
-				);
-
-				accountMessage.textContent =
-					"Account eliminato. Reindirizzamento...";
-
-				accountMessage.className =
-					"auth-message success";
-
-				setTimeout(
-					() => {
-						window.location.href =
-							"../index.html";
-					},
-					1000
-				);
-
-			} catch (error) {
-
-				console.error(
-					"Errore eliminazione account:",
-					error
-				);
-
-				accountMessage.textContent =
-					"Si è verificato un errore durante l'eliminazione dell'account.";
-
-				accountMessage.className =
-					"auth-message error";
-
-				deleteAccountButton.disabled =
-					false;
-
-				if (changePasswordButton) {
-					changePasswordButton.disabled =
-						false;
-				}
-
-				if (cookieButton) {
-					cookieButton.disabled =
-						false;
-				}
-			}
-		}
-	);
+            if (emailNotifications && emailPreferenceLoaded) {
+                emailNotifications.disabled = false;
+            }
+        }
+    });
 }
 
+document.addEventListener("DOMContentLoaded", () => {
+    loadAccount();
 
-document.addEventListener(
-	"DOMContentLoaded",
-	() => {
+    const currentYear = document.getElementById("currentYear");
 
-		loadAccount();
-
-		const currentYear =
-			document.getElementById(
-				"currentYear"
-			);
-
-		if (currentYear) {
-
-			currentYear.textContent =
-				new Date().getFullYear();
-		}
-	}
-);
+    if (currentYear) {
+        currentYear.textContent = new Date().getFullYear();
+    }
+});
