@@ -17,6 +17,7 @@ const status = document.getElementById("announcementStatus");
 const editorTitle = document.getElementById("editorTitle");
 
 const sendTestEmailBtn = document.getElementById("sendTestEmailBtn");
+const sendAnnouncementBtn = document.getElementById("sendAnnouncementBtn");
 
 const DRAFT_KEY = "cinemaCheGasaAnnouncementDrafts";
 
@@ -28,6 +29,8 @@ function createId() {
 }
 
 function showStatus(element, message, type = "success") {
+    if (!element) return;
+
     element.textContent = message;
     element.className = `mt-3 text-${type}`;
 }
@@ -50,6 +53,8 @@ function saveDraftsToStorage() {
 }
 
 function updateDraftMenu() {
+    if (!draftSelect) return;
+
     const previousValue = selectedDraftId;
 
     draftSelect.replaceChildren();
@@ -75,30 +80,37 @@ function updateDraftMenu() {
         draftSelect.value = "";
     }
 
-    deleteDraftBtn.disabled = !draftSelect.value;
+    if (deleteDraftBtn) {
+        deleteDraftBtn.disabled = !draftSelect.value;
+    }
 }
 
 function getFormData() {
     return {
-        name: draftNameInput.value.trim(),
-        type: typeInput.value,
-        subject: subjectInput.value.trim(),
-        message: messageInput.value.trim()
+        name: draftNameInput?.value.trim() || "",
+        type: typeInput?.value || "",
+        subject: subjectInput?.value.trim() || "",
+        message: messageInput?.value.trim() || ""
     };
 }
 
 function loadDraft(draft) {
     selectedDraftId = draft.id;
 
-    draftNameInput.value = draft.name;
-    typeInput.value = draft.type;
-    subjectInput.value = draft.subject;
-    messageInput.value = draft.message;
+    if (draftNameInput) draftNameInput.value = draft.name;
+    if (typeInput) typeInput.value = draft.type;
+    if (subjectInput) subjectInput.value = draft.subject;
+    if (messageInput) messageInput.value = draft.message;
 
-    draftSelect.value = draft.id;
-    deleteDraftBtn.disabled = false;
+    if (draftSelect) draftSelect.value = draft.id;
 
-    editorTitle.textContent = "Modifica comunicazione";
+    if (deleteDraftBtn) {
+        deleteDraftBtn.disabled = false;
+    }
+
+    if (editorTitle) {
+        editorTitle.textContent = "Modifica comunicazione";
+    }
 
     showStatus(
         draftStatus,
@@ -116,13 +128,19 @@ function loadDraft(draft) {
 }
 
 function resetForm() {
-    form.reset();
+    if (form) form.reset();
 
     selectedDraftId = null;
-    draftSelect.value = "";
-    deleteDraftBtn.disabled = true;
 
-    editorTitle.textContent = "Nuova comunicazione";
+    if (draftSelect) draftSelect.value = "";
+
+    if (deleteDraftBtn) {
+        deleteDraftBtn.disabled = true;
+    }
+
+    if (editorTitle) {
+        editorTitle.textContent = "Nuova comunicazione";
+    }
 
     resetPreview();
 
@@ -134,6 +152,8 @@ function resetForm() {
 }
 
 function resetPreview() {
+    if (!preview) return;
+
     preview.replaceChildren();
 
     const placeholder = document.createElement("p");
@@ -150,7 +170,7 @@ function saveDraft() {
 
     if (!data.name) {
         showStatus(status, "Inserisci un nome per la bozza.", "danger");
-        draftNameInput.focus();
+        draftNameInput?.focus();
         return;
     }
 
@@ -178,7 +198,9 @@ function saveDraft() {
             saveDraftsToStorage();
             updateDraftMenu();
 
-            draftSelect.value = selectedDraftId;
+            if (draftSelect) {
+                draftSelect.value = selectedDraftId;
+            }
 
             showStatus(
                 status,
@@ -211,10 +233,17 @@ function saveDraft() {
     saveDraftsToStorage();
     updateDraftMenu();
 
-    draftSelect.value = draft.id;
-    deleteDraftBtn.disabled = false;
+    if (draftSelect) {
+        draftSelect.value = draft.id;
+    }
 
-    editorTitle.textContent = "Modifica comunicazione";
+    if (deleteDraftBtn) {
+        deleteDraftBtn.disabled = false;
+    }
+
+    if (editorTitle) {
+        editorTitle.textContent = "Modifica comunicazione";
+    }
 
     showStatus(
         status,
@@ -270,25 +299,25 @@ function deleteDraft() {
 }
 
 function generatePreview() {
-    if (!form.reportValidity()) return;
+    if (!form || !preview || !form.reportValidity()) return;
 
     preview.replaceChildren();
 
     const category = document.createElement("span");
 
     category.className = "badge text-bg-danger mb-3";
-    category.textContent = typeInput.value;
+    category.textContent = typeInput?.value || "";
 
     const subject = document.createElement("h3");
 
     subject.className = "mb-3";
-    subject.textContent = subjectInput.value.trim();
+    subject.textContent = subjectInput?.value.trim() || "";
 
     const message = document.createElement("p");
 
     message.className = "mb-0";
     message.style.whiteSpace = "pre-wrap";
-    message.textContent = messageInput.value.trim();
+    message.textContent = messageInput?.value.trim() || "";
 
     const separator = document.createElement("hr");
     separator.className = "my-4";
@@ -298,7 +327,13 @@ function generatePreview() {
     footer.className = "text-secondary small mb-0";
     footer.textContent = "Cinema che Gasa";
 
-    preview.append(category, subject, message, separator, footer);
+    preview.append(
+        category,
+        subject,
+        message,
+        separator,
+        footer
+    );
 
     showStatus(
         status,
@@ -322,8 +357,8 @@ function escapeHtml(text) {
 }
 
 async function sendTestEmail() {
-    const subject = subjectInput.value.trim();
-    const message = messageInput.value.trim();
+    const subject = subjectInput?.value.trim() || "";
+    const message = messageInput?.value.trim() || "";
 
     if (!subject || !message) {
         showStatus(
@@ -340,10 +375,14 @@ async function sendTestEmail() {
 
     if (!confirmed) return;
 
-    sendTestEmailBtn.disabled = true;
-    saveDraftBtn.disabled = true;
+    if (sendTestEmailBtn) {
+        sendTestEmailBtn.disabled = true;
+        sendTestEmailBtn.textContent = "Invio in corso...";
+    }
 
-    sendTestEmailBtn.textContent = "Invio in corso...";
+    if (saveDraftBtn) {
+        saveDraftBtn.disabled = true;
+    }
 
     try {
         const html = `
@@ -356,7 +395,7 @@ async function sendTestEmail() {
             </head>
             <body style="font-family:Arial,sans-serif;color:#222;line-height:1.6;padding:20px;">
                 <h2 style="color:#c00;">
-                    ${escapeHtml(typeInput.value)}
+                    ${escapeHtml(typeInput?.value || "")}
                 </h2>
 
                 <h3>${escapeHtml(subject)}</h3>
@@ -372,10 +411,6 @@ async function sendTestEmail() {
             </html>
         `;
 
-        /*
-         * Compatibilità con i nomi più comuni del client.
-         * Il client deve essere creato nel file supabase.js.
-         */
         let client = null;
 
         if (typeof supabaseClient !== "undefined") {
@@ -401,9 +436,7 @@ async function sendTestEmail() {
             }
         );
 
-        if (error) {
-            throw error;
-        }
+        if (error) throw error;
 
         if (data?.error) {
             throw new Error(data.error);
@@ -423,15 +456,129 @@ async function sendTestEmail() {
             "danger"
         );
     } finally {
-        sendTestEmailBtn.disabled = false;
-        saveDraftBtn.disabled = false;
+        if (sendTestEmailBtn) {
+            sendTestEmailBtn.disabled = false;
+            sendTestEmailBtn.innerHTML =
+                '<i class="bi bi-envelope"></i> Invia email di prova';
+        }
 
-        sendTestEmailBtn.innerHTML =
-            '<i class="bi bi-envelope"></i> Invia email di prova';
+        if (saveDraftBtn) {
+            saveDraftBtn.disabled = false;
+        }
     }
 }
 
-draftSelect.addEventListener("change", () => {
+async function sendAnnouncement() {
+    const subject = subjectInput?.value.trim() || "";
+    const message = messageInput?.value.trim() || "";
+
+    if (!subject || !message) {
+        showStatus(
+            status,
+            "Inserisci oggetto e messaggio.",
+            "danger"
+        );
+        return;
+    }
+
+    const confirmed = confirm(
+        "ATTENZIONE!\n\nVuoi inviare questa comunicazione via email a tutti gli utenti che hanno attivato le notifiche?\n\nL'invio reale non può essere annullato."
+    );
+
+    if (!confirmed) return;
+
+    const escapeHTML = (text) => text
+        .replace(/&/g, "&amp;")
+        .replace(/</g, "&lt;")
+        .replace(/>/g, "&gt;")
+        .replace(/"/g, "&quot;")
+        .replace(/'/g, "&#039;");
+
+    const html = `
+        <div style="font-family:Arial,sans-serif;max-width:600px;margin:auto;color:#222">
+            <h2 style="color:#c62828">Cinema che Gasa</h2>
+            <h3>${escapeHTML(subject)}</h3>
+            <div style="line-height:1.6;white-space:pre-wrap">${escapeHTML(message)}</div>
+            <hr>
+            <p style="font-size:12px;color:#777">
+                Hai ricevuto questa email da Cinema che Gasa.
+            </p>
+        </div>
+    `;
+
+    if (sendAnnouncementBtn) {
+        sendAnnouncementBtn.disabled = true;
+    }
+
+    showStatus(
+        status,
+        "Invio delle email in corso...",
+        "info"
+    );
+
+    try {
+        const client = typeof supabaseClient !== "undefined"
+            ? supabaseClient
+            : null;
+
+        if (!client?.functions?.invoke) {
+            throw new Error(
+                "Client Supabase non trovato. Controlla js/supabase.js."
+            );
+        }
+
+        const { data, error } = await client.functions.invoke(
+            "send-announcement",
+            {
+                body: {
+                    subject,
+                    html
+                }
+            }
+        );
+
+        if (error) {
+            let details = error.message;
+
+            if (error.context) {
+                try {
+                    const response = await error.context.json();
+                    details = response.error || response.message || details;
+                } catch {}
+            }
+
+            throw new Error(details);
+        }
+
+        if (data?.error) {
+            throw new Error(data.error);
+        }
+
+        showStatus(
+            status,
+            `Invio completato. Inviate: ${data.sent}. Fallite: ${data.failed}. Destinatari: ${data.total}.`,
+            "success"
+        );
+    } catch (error) {
+        console.error("Errore invio comunicazione:", error);
+
+        showStatus(
+            status,
+            "Errore durante l'invio: " + error.message,
+            "danger"
+        );
+    } finally {
+        if (sendAnnouncementBtn) {
+            sendAnnouncementBtn.disabled = false;
+        }
+    }
+}
+
+/* Gestione delle bozze */
+
+draftSelect?.addEventListener("change", (event) => {
+    event.preventDefault();
+
     const id = draftSelect.value;
 
     if (!id) {
@@ -451,14 +598,37 @@ draftSelect.addEventListener("change", () => {
     if (draft) loadDraft(draft);
 });
 
-saveDraftBtn.addEventListener("click", saveDraft);
-deleteDraftBtn.addEventListener("click", deleteDraft);
-previewButton.addEventListener("click", generatePreview);
-clearAnnouncementBtn.addEventListener("click", resetForm);
+saveDraftBtn?.addEventListener("click", (event) => {
+    event.preventDefault();
+    saveDraft();
+});
 
-sendTestEmailBtn.addEventListener("click", sendTestEmail);
+deleteDraftBtn?.addEventListener("click", (event) => {
+    event.preventDefault();
+    deleteDraft();
+});
 
-draftNameInput.addEventListener("input", () => {
+previewButton?.addEventListener("click", (event) => {
+    event.preventDefault();
+    generatePreview();
+});
+
+clearAnnouncementBtn?.addEventListener("click", (event) => {
+    event.preventDefault();
+    resetForm();
+});
+
+sendTestEmailBtn?.addEventListener("click", (event) => {
+    event.preventDefault();
+    sendTestEmail();
+});
+
+sendAnnouncementBtn?.addEventListener("click", (event) => {
+    event.preventDefault();
+    sendAnnouncement();
+});
+
+draftNameInput?.addEventListener("input", () => {
     if (selectedDraftId) {
         showStatus(
             status,
@@ -469,7 +639,7 @@ draftNameInput.addEventListener("input", () => {
 });
 
 [typeInput, subjectInput, messageInput].forEach((input) => {
-    input.addEventListener("input", () => {
+    input?.addEventListener("input", () => {
         if (selectedDraftId) {
             showStatus(
                 status,
@@ -480,84 +650,9 @@ draftNameInput.addEventListener("input", () => {
     });
 });
 
+/* Inizializzazione */
+
 drafts = getDrafts();
 
 updateDraftMenu();
 resetPreview();
-
-document.getElementById("sendAnnouncementBtn")?.addEventListener("click", async () => {
-const subject = document.getElementById("announcementSubject").value.trim();
-const message = document.getElementById("announcementMessage").value.trim();
-const status = document.getElementById("announcementStatus");
-const button = document.getElementById("sendAnnouncementBtn");
-
-
-if (!subject || !message) {
-    status.textContent = "Inserisci oggetto e messaggio.";
-    return;
-}
-
-const confirmed = confirm(
-    "ATTENZIONE!\n\nVuoi inviare questa comunicazione via email a tutti gli utenti che hanno attivato le notifiche?\n\nL'invio reale non può essere annullato."
-);
-
-if (!confirmed) return;
-
-const escapeHTML = text => text
-    .replace(/&/g, "&amp;")
-    .replace(/</g, "&lt;")
-    .replace(/>/g, "&gt;")
-    .replace(/"/g, "&quot;")
-    .replace(/'/g, "&#039;");
-
-const html = `
-    <div style="font-family:Arial,sans-serif;max-width:600px;margin:auto;color:#222">
-        <h2 style="color:#c62828">Cinema che Gasa</h2>
-        <h3>${escapeHTML(subject)}</h3>
-        <div style="line-height:1.6;white-space:pre-wrap">${escapeHTML(message)}</div>
-        <hr>
-        <p style="font-size:12px;color:#777">
-            Hai ricevuto questa email da Cinema che Gasa.
-        </p>
-    </div>
-`;
-
-button.disabled = true;
-status.textContent = "Invio delle email in corso...";
-
-try {
-    const { data, error } = await supabaseClient.functions.invoke(
-        "send-announcement",
-        {
-            body: {
-                subject,
-                html
-            }
-        }
-    );
-
-    if (error) {
-        let details = error.message;
-
-        if (error.context) {
-            try {
-                const response = await error.context.json();
-                details = response.error || response.message || details;
-            } catch {}
-        }
-
-        throw new Error(details);
-    }
-
-    status.textContent =
-        `Invio completato. Inviate: ${data.sent}. Fallite: ${data.failed}. Destinatari: ${data.total}.`;
-
-} catch (error) {
-    console.error("Errore invio comunicazione:", error);
-    status.textContent = "Errore durante l'invio: " + error.message;
-} finally {
-    button.disabled = false;
-}
-
-
-});
