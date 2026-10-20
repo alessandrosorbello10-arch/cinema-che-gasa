@@ -28,6 +28,11 @@
         >
 
         <link
+            rel="stylesheet"
+            href="../css/personal_classifica.css"
+        >
+
+        <link
             rel="icon"
             type="image/png"
             href="../img/logo_cinema-che-gasa.png"
@@ -286,17 +291,29 @@
 
 
                         <div class="film-rating">
-
                             <i class="bi bi-star-fill"></i>
+                            <strong id="filmRating">-</strong>
+                            <span>/10</span>
+                        </div>
 
-                            <strong id="filmRating">
-                                -
-                            </strong>
+                        <div class="personal-film-rating mt-4">
+                            <h3>Il tuo voto</h3>
+                            <p>Quanto ti è piaciuto questo film?</p>
 
-                            <span>
-                                /10
-                            </span>
+                            <div id="personalRatingButtons" class="personal-rating-buttons">
+                                <button type="button" data-rating="1">1</button>
+                                <button type="button" data-rating="2">2</button>
+                                <button type="button" data-rating="3">3</button>
+                                <button type="button" data-rating="4">4</button>
+                                <button type="button" data-rating="5">5</button>
+                                <button type="button" data-rating="6">6</button>
+                                <button type="button" data-rating="7">7</button>
+                                <button type="button" data-rating="8">8</button>
+                                <button type="button" data-rating="9">9</button>
+                                <button type="button" data-rating="10">10</button>
+                            </div>
 
+                            <p id="personalRatingStatus" class="mt-3" aria-live="polite"></p>
                         </div>
 
 

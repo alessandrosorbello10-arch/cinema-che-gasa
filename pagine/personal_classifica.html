@@ -1,0 +1,166 @@
+<!DOCTYPE html>
+<html lang="it">
+
+    <head>
+        <meta charset="UTF-8">
+        <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+        <title>La mia classifica - Cinema che Gasa</title>
+
+        <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet">
+        <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.min.css">
+        <link rel="icon" type="image/png" href="../img/logo_cinema-che-gasa.png">
+        <link rel="stylesheet" href="../css/style.css">
+        <link rel="stylesheet" href="../css/personal_classifica.css">
+    </head>
+
+    <body>
+
+        <nav class="navbar navbar-expand-lg navbar-dark fixed-top">
+            <div class="container-fluid px-4">
+
+                <a class="navbar-brand d-flex align-items-center" href="../index.html">
+                    <img
+                        src="../img/logo_cinema-che-gasa.png"
+                        alt="Cinema che Gasa"
+                        class="site-logo"
+                    >
+
+                    <span>
+                        <strong>
+                            <span style="color: red; font-size: larger;">Cinema</span>
+                            che Gasa
+                        </strong>
+                    </span>
+                </a>
+
+                <a href="classifiche.html" class="btn btn-outline-light">
+                    <i class="bi bi-arrow-left"></i>
+                    Classifiche
+                </a>
+
+            </div>
+        </nav>
+
+        <main class="personal-page">
+
+            <div class="container">
+
+                <header class="personal-header">
+                    <span class="section-label">IL TUO SPAZIO</span>
+
+                    <h1>La mia classifica</h1>
+
+                    <p>
+                        Tutti i film che hai valutato, ordinati dal tuo voto più alto al più basso.
+                    </p>
+                </header>
+
+                <section class="personal-card">
+
+                    <div class="d-flex align-items-center justify-content-between flex-wrap gap-3">
+                        <div>
+                            <h2 class="mb-1">I tuoi film preferiti</h2>
+
+                            <p class="text-secondary mb-0">
+                                La tua classifica si aggiorna in base ai voti che assegni nelle pagine dei film.
+                            </p>
+                        </div>
+
+                        <span class="personal-ranking-icon">
+                            <i class="bi bi-trophy-fill"></i>
+                        </span>
+                    </div>
+
+                    <div id="loginNotice" class="alert alert-dark mt-4" hidden>
+                        <i class="bi bi-person-lock"></i>
+
+                        Accedi per visualizzare la tua classifica personale.
+
+                        <a href="login.html" class="alert-link">Accedi</a>
+                        oppure
+                        <a href="registrazione.html" class="alert-link">registrati</a>.
+                    </div>
+
+                    <div class="personal-tools">
+                        <input
+                            type="search"
+                            id="personalSearch"
+                            class="form-control"
+                            placeholder="Cerca un film nella tua classifica..."
+                            aria-label="Cerca un film nella tua classifica"
+                        >
+                    </div>
+
+                    <div id="personalStatus" class="personal-status" role="status" aria-live="polite"></div>
+
+                    <div id="personalRanking">
+                        <div class="personal-empty">
+                            <i class="bi bi-hourglass-split"></i>
+                            Caricamento della tua classifica...
+                        </div>
+                    </div>
+
+                </section>
+
+                <div class="personal-actions">
+                    <a href="film.html" class="btn btn-danger">
+                        <i class="bi bi-film"></i>
+                        Esplora i film
+                    </a>
+
+                    <a href="classifiche.html" class="btn btn-outline-light">
+                        <i class="bi bi-trophy"></i>
+                        Classifica generale
+                    </a>
+                </div>
+
+            </div>
+
+        </main>
+
+        <footer>
+
+            <div class="container text-center">
+                <p>
+                    © <span id="currentYear"></span>
+                    sito in fase di sviluppo - Cinema che Gasa
+                </p>
+            </div>
+
+            <div class="footer-privacy">
+
+                <span class="footer-privacy-title">
+                    <i class="bi bi-shield-lock"></i>
+                    Privacy
+                </span>
+
+                <a href="../privacy.html">
+                    <i class="bi bi-file-text"></i>
+                    Privacy Policy
+                </a>
+
+                <a href="../cookie.html">
+                    <i class="bi bi-cookie"></i>
+                    Cookie Policy
+                </a>
+
+                <button id="manageCookies">
+                    <i class="bi bi-sliders"></i>
+                    Gestisci cookie
+                </button>
+
+            </div>
+
+        </footer>
+
+        <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
+        <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+        <script src="../js/cookie-consent.js"></script>
+        <script src="../js/supabase.js"></script>
+        <script src="../js/app.js"></script>
+        <script src="../js/personal_classifica.js"></script>
+
+    </body>
+
+</html>
