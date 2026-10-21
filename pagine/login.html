@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-	<html lang="it">
+<html lang="it">
 	<head>
 		<meta charset="UTF-8">
 		<meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -42,13 +42,30 @@
 				border-radius: 4px;
 			}
 
-			#loginButton:disabled {
+			#loginButton:disabled,
+			#forgotPasswordButton:disabled {
 				opacity: 0.7;
 				cursor: wait;
 			}
 
 			.auth-message:empty {
 				display: none;
+			}
+
+			.forgot-password {
+				text-align: right;
+				margin-top: 8px;
+			}
+
+			.forgot-password button {
+				color: #dc3545;
+				text-decoration: none;
+				font-size: 0.9rem;
+			}
+
+			.forgot-password button:hover {
+				color: #ff6677;
+				text-decoration: underline;
 			}
 		</style>
 	</head>
@@ -62,6 +79,7 @@
 						alt="Cinema che Gasa"
 						class="site-logo"
 					>
+
 					<span>
 						<strong>
 							<span style="color: red; font-size: larger;">Cinema</span>
@@ -118,7 +136,21 @@
 								aria-label="Mostra password"
 								aria-pressed="false"
 							>
-								<i class="bi bi-eye" id="togglePasswordIcon" aria-hidden="true"></i>
+								<i
+									class="bi bi-eye"
+									id="togglePasswordIcon"
+									aria-hidden="true"
+								></i>
+							</button>
+						</div>
+
+						<div class="forgot-password">
+							<button
+								type="button"
+								id="forgotPasswordButton"
+								class="btn btn-link p-0"
+							>
+								Password dimenticata?
 							</button>
 						</div>
 					</div>
@@ -161,6 +193,7 @@
 				const showPassword = passwordInput.type === "password";
 
 				passwordInput.type = showPassword ? "text" : "password";
+
 				togglePasswordIcon.className = showPassword
 					? "bi bi-eye-slash"
 					: "bi bi-eye";
@@ -170,7 +203,10 @@
 					showPassword ? "Nascondi password" : "Mostra password"
 				);
 
-				togglePassword.setAttribute("aria-pressed", String(showPassword));
+				togglePassword.setAttribute(
+					"aria-pressed",
+					String(showPassword)
+				);
 			});
 		</script>
 	</body>
