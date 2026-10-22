@@ -1,32 +1,231 @@
 <!DOCTYPE html>
+
 <html lang="it">
 
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <head>
+        <meta charset="UTF-8">
+        <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
     <title>Film - Cinema che Gasa</title>
 
-    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet">
+    <meta
+        name="description"
+        content="Esplora il catalogo di Cinema che Gasa: cerca film, scopri nuovi titoli e filtra per genere, anno e voto."
+    >
 
-    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.min.css">
-    <link rel="icon" type="image/png" href="../img/logo_cinema-che-gasa.png">
+    <link
+        href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css"
+        rel="stylesheet"
+    >
+
+    <link
+        rel="stylesheet"
+        href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.min.css"
+    >
+
+    <link
+        rel="icon"
+        type="image/png"
+        href="../img/logo_cinema-che-gasa.png"
+    >
+
     <link rel="stylesheet" href="../css/style.css">
-</head>
 
-<body>
+    <style>
+        /* Area della paginazione */
+
+        .films-pagination {
+            margin: 45px 0 20px;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            gap: 22px;
+        }
+
+        .pagination-info {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            color: #b8b8b8;
+            font-size: 0.92rem;
+        }
+
+        .pagination-info strong {
+            color: #fff;
+            font-weight: 700;
+        }
+
+        .pagination-info-icon {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            width: 36px;
+            height: 36px;
+            flex-shrink: 0;
+            border-radius: 10px;
+            background: rgba(220, 0, 0, 0.12);
+            color: #ff3030;
+        }
+
+        /* Controlli di navigazione */
+
+        .pagination-controls {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 10px;
+            max-width: 100%;
+        }
+
+        .pagination-numbers {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 6px;
+        }
+
+        .pagination-number,
+        .pagination-arrow {
+            min-width: 42px;
+            height: 42px;
+            padding: 0 12px;
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            gap: 8px;
+            border: 1px solid #303030;
+            border-radius: 12px;
+            background: #151515;
+            color: #eee;
+            font-size: 0.9rem;
+            font-weight: 600;
+            cursor: pointer;
+            transition:
+                background 0.2s ease,
+                border-color 0.2s ease,
+                color 0.2s ease,
+                transform 0.2s ease;
+        }
+
+        .pagination-number:hover:not(.active),
+        .pagination-arrow:hover:not(:disabled) {
+            background: #252525;
+            border-color: #e50914;
+            color: #fff;
+            transform: translateY(-2px);
+        }
+
+        .pagination-number.active {
+            background: #e50914;
+            border-color: #e50914;
+            color: #fff;
+            box-shadow: 0 4px 16px rgba(229, 9, 20, 0.25);
+        }
+
+        .pagination-arrow:disabled {
+            opacity: 0.35;
+            cursor: not-allowed;
+            transform: none;
+        }
+
+        .pagination-ellipsis {
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            min-width: 18px;
+            color: #888;
+        }
+
+        .pagination-number:focus-visible,
+        .pagination-arrow:focus-visible {
+            outline: 2px solid #ff3030;
+            outline-offset: 3px;
+        }
+
+        .films-pagination:empty {
+            display: none;
+        }
+
+        /* Adattamento agli smartphone */
+
+        @media (max-width: 575.98px) {
+            .films-pagination {
+                margin-top: 32px;
+                gap: 18px;
+            }
+
+            .pagination-controls {
+                width: 100%;
+                gap: 5px;
+            }
+
+            .pagination-numbers {
+                gap: 4px;
+            }
+
+            .pagination-number {
+                min-width: 34px;
+                height: 38px;
+                padding: 0 7px;
+                border-radius: 9px;
+                font-size: 0.82rem;
+            }
+
+            .pagination-arrow {
+                min-width: 38px;
+                height: 38px;
+                padding: 0 8px;
+                border-radius: 9px;
+            }
+
+            .pagination-arrow span {
+                display: none;
+            }
+
+            .pagination-info {
+                font-size: 0.84rem;
+            }
+        }
+
+        /* Rispetta le preferenze di accessibilità */
+
+        @media (prefers-reduced-motion: reduce) {
+            .pagination-number,
+            .pagination-arrow {
+                transition: none;
+            }
+        }
+    </style>
+    ```
+
+    </head>
+
+    <body>
+
+    ```
+    <!-- Navbar -->
 
     <nav class="navbar navbar-expand-lg navbar-dark fixed-top">
-
         <div class="container-fluid px-4">
 
-            <a class="navbar-brand d-flex align-items-center" href="../index.html">
+            <a
+                class="navbar-brand d-flex align-items-center"
+                href="../index.html"
+            >
                 <img
                     src="../img/logo_cinema-che-gasa.png"
                     alt="Cinema che Gasa"
                     class="site-logo"
                 >
-                <span><strong><span style="color: red; font-size: larger;">Cinema</span> che Gasa</strong></span>
+
+                <span>
+                    <strong>
+                        <span style="color: red; font-size: larger;">
+                            Cinema
+                        </span>
+                        che Gasa
+                    </strong>
+                </span>
             </a>
 
             <button
@@ -36,76 +235,109 @@
                 data-bs-target="#mainNavbar"
                 aria-controls="mainNavbar"
                 aria-expanded="false"
-                aria-label="Apri menu">
-
+                aria-label="Apri menu"
+            >
                 <span class="navbar-toggler-icon"></span>
-
             </button>
 
-            <div class="collapse navbar-collapse" id="mainNavbar">
+            <div
+                class="collapse navbar-collapse"
+                id="mainNavbar"
+            >
 
                 <ul class="navbar-nav mx-auto mb-2 mb-lg-0">
 
                     <li class="nav-item">
-                            <a class="nav-link active" href="../index.html">
-                                <i class="bi bi-house-door"></i> Home
-                            </a>
-                        </li>
+                        <a
+                            class="nav-link"
+                            href="../index.html"
+                        >
+                            <i class="bi bi-house-door"></i>
+                            Home
+                        </a>
+                    </li>
 
-                        <li class="nav-item">
-                            <a class="nav-link" href="film.html">
-                                <i class="bi bi-film"></i> Film
-                            </a>
-                        </li>
+                    <li class="nav-item">
+                        <a
+                            class="nav-link active"
+                            href="film.html"
+                            aria-current="page"
+                        >
+                            <i class="bi bi-film"></i>
+                            Film
+                        </a>
+                    </li>
 
-                        <li class="nav-item">
-                            <a class="nav-link" href="generi.html">
-                                <i class="bi bi-grid"></i> Generi
-                            </a>
-                        </li>
+                    <li class="nav-item">
+                        <a
+                            class="nav-link"
+                            href="generi.html"
+                        >
+                            <i class="bi bi-grid"></i>
+                            Generi
+                        </a>
+                    </li>
 
-                        <li class="nav-item">
-                            <a href="cosa-guardare.html" class="nav-link">
-                                <i class="bi bi-dice-5"></i> Cosa guardare?
-                            </a>
-                        </li>
+                    <li class="nav-item">
+                        <a
+                            href="cosa-guardare.html"
+                            class="nav-link"
+                        >
+                            <i class="bi bi-dice-5"></i>
+                            Cosa guardare?
+                        </a>
+                    </li>
 
-                        <li class="nav-item">
-                            <a class="nav-link" href="classifiche.html">
-                                <i class="bi bi-trophy"></i> Classifiche
-                            </a>
-                        </li>
+                    <li class="nav-item">
+                        <a
+                            class="nav-link"
+                            href="classifiche.html"
+                        >
+                            <i class="bi bi-trophy"></i>
+                            Classifiche
+                        </a>
+                    </li>
 
-                        <li class="nav-item">
-							<a class="nav-link" href="salvati.html">
-								<i class="bi bi-bookmark-fill"></i>
-								Salvati
-							</a>
-						</li>
+                    <li class="nav-item">
+                        <a
+                            class="nav-link"
+                            href="salvati.html"
+                        >
+                            <i class="bi bi-bookmark-fill"></i>
+                            Salvati
+                        </a>
+                    </li>
 
                 </ul>
 
-                <div class="d-flex gap-2" id="accountArea">
-
-                    <a href="login.html" class="btn btn-outline-light">
-                        <i class="bi bi-box-arrow-in-right"></i> Accedi
+                <div
+                    class="d-flex gap-2"
+                    id="accountArea"
+                >
+                    <a
+                        href="login.html"
+                        class="btn btn-outline-light"
+                    >
+                        <i class="bi bi-box-arrow-in-right"></i>
+                        Accedi
                     </a>
 
-                    <a href="registrazione.html" class="btn btn-light">
+                    <a
+                        href="registrazione.html"
+                        class="btn btn-light"
+                    >
                         Registrati
                     </a>
-
                 </div>
 
             </div>
-
         </div>
-
     </nav>
 
 
-    <main class="films-page">
+    <!-- Catalogo -->
 
+    <main class="films-page">
         <div class="container">
 
             <div class="films-header">
@@ -125,41 +357,47 @@
             </div>
 
 
-            <div class="search-box">
+            <!-- Ricerca -->
 
+            <div class="search-box">
                 <i class="bi bi-search"></i>
 
                 <input
                     type="text"
                     id="filmSearch"
                     placeholder="Cerca un film..."
-                    autocomplete="off">
-
+                    autocomplete="off"
+                    aria-label="Cerca un film per titolo"
+                >
             </div>
 
 
+            <!-- Filtri -->
+
             <div class="film-filters">
 
-                <select id="genreFilter">
-
+                <select
+                    id="genreFilter"
+                    aria-label="Filtra per genere"
+                >
                     <option value="">
                         Tutti i generi
                     </option>
-
                 </select>
 
-
-                <select id="yearFilter">
-
+                <select
+                    id="yearFilter"
+                    aria-label="Filtra per anno"
+                >
                     <option value="">
                         Tutti gli anni
                     </option>
-
                 </select>
 
-
-                <select id="ratingFilter">
-
+                <select
+                    id="ratingFilter"
+                    aria-label="Filtra per voto minimo"
+                >
                     <option value="">
                         Qualsiasi voto
                     </option>
@@ -183,62 +421,98 @@
                     <option value="10">
                         10
                     </option>
-
                 </select>
 
             </div>
 
 
-            <div class="row g-4" id="filmsContainer"></div>
+            <!-- Risultati del catalogo -->
+
+            <div
+                class="row g-4"
+                id="filmsContainer"
+                aria-live="polite"
+            ></div>
+
+
+            <!-- Paginazione generata da film.js -->
+
+            <div
+                id="filmsPagination"
+                class="films-pagination"
+            ></div>
 
         </div>
-
     </main>
 
+
+    <!-- Footer -->
 
     <footer>
 
         <div class="container text-center">
 
             <p>
-                © <span id="currentYear"></span> sito in fase di sviluppo - Cinema che Gasa
+                © <span id="currentYear"></span>
+                sito in fase di sviluppo - Cinema che Gasa
             </p>
 
         </div>
 
         <div class="footer-privacy">
+
             <span class="footer-privacy-title">
-                <i class="bi bi-shield-lock"></i> Privacy
+                <i class="bi bi-shield-lock"></i>
+                Privacy
             </span>
 
             <a href="../privacy.html">
-                <i class="bi bi-file-text"></i> Privacy Policy
+                <i class="bi bi-file-text"></i>
+                Privacy Policy
             </a>
 
             <a href="../cookie.html">
-                <i class="bi bi-cookie"></i> Cookie Policy
+                <i class="bi bi-cookie"></i>
+                Cookie Policy
             </a>
 
-            <button id="manageCookies">
-                <i class="bi bi-sliders"></i> Gestisci cookie
+            <button
+                id="manageCookies"
+                type="button"
+            >
+                <i class="bi bi-sliders"></i>
+                Gestisci cookie
             </button>
+
         </div>
 
     </footer>
 
 
     <!-- Bootstrap -->
-    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
+
+    <script
+        src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"
+    ></script>
+
 
     <!-- Supabase -->
-    <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+
+    <script
+        src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"
+    ></script>
+
     <script src="../js/supabase.js"></script>
 
+
     <!-- JavaScript del sito -->
+
     <script src="../js/app.js"></script>
+
     <script src="../js/film.js"></script>
+
     <script src="../js/cookie-consent.js"></script>
 
-</body>
+    </body>
 
 </html>
