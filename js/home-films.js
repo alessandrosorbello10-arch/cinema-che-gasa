@@ -152,7 +152,7 @@ function updateHero(films) {
                     <p class="hero-info">
                         -
                         <span>•</span>
-                        La tua valutazione:
+                        valutazione:
                         <strong>-/10</strong>
                     </p>
                     <p class="hero-description">
