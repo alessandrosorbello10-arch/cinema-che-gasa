@@ -1,0 +1,113 @@
+.film-giorno-container {
+    padding-top: 120px;
+    padding-bottom: 60px;
+    text-align: center;
+}
+
+.film-giorno-container h1 {
+    color: red;
+    font-weight: bold;
+    font-size: 38px;
+}
+
+.film-giorno-sottotitolo {
+    color: #aaa;
+    margin-bottom: 40px;
+}
+
+.film-giorno-card {
+    background: #141414;
+    border-radius: 12px;
+    overflow: hidden;
+    max-width: 950px;
+    margin: auto;
+    display: flex;
+    text-align: left;
+    border: 1px solid #292929;
+}
+
+.film-giorno-poster {
+    width: 350px;
+    min-height: 450px;
+    object-fit: cover;
+}
+
+.film-giorno-info {
+    padding: 30px;
+    flex: 1;
+}
+
+.film-giorno-info h2 {
+    color: white;
+    font-weight: bold;
+    margin-bottom: 20px;
+}
+
+.film-giorno-info p {
+    color: #ccc;
+    line-height: 1.7;
+}
+
+.film-giorno-meta {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 15px;
+    margin-bottom: 25px;
+}
+
+.film-giorno-meta span {
+    color: white;
+    background: #252525;
+    padding: 7px 12px;
+    border-radius: 6px;
+}
+
+.film-giorno-voto {
+    color: #ffc107 !important;
+    font-weight: bold;
+}
+
+.film-giorno-etichetta {
+    color: red;
+    font-weight: bold;
+    font-size: 13px;
+    letter-spacing: 2px;
+    margin-bottom: 12px;
+}
+
+.film-giorno-loading {
+    color: white;
+    padding: 60px;
+}
+
+.film-giorno-loading p {
+    margin-top: 15px;
+}
+
+.film-giorno-errore {
+    color: #ff4444;
+    padding: 40px;
+    text-align: center;
+}
+
+@media (max-width: 768px) {
+
+    .film-giorno-card {
+        flex-direction: column;
+    }
+
+    .film-giorno-poster {
+        width: 100%;
+        min-height: auto;
+        max-height: 450px;
+    }
+
+    .film-giorno-info {
+        padding: 20px;
+    }
+
+    .film-giorno-container h1 {
+        font-size: 29px;
+    }
+
+}

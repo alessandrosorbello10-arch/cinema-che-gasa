@@ -229,7 +229,7 @@ function updateHero(films) {
                 <p class="hero-info">
                     ${year}
                     <span>•</span>
-                    La tua valutazione:
+                    valutazione:
                     <strong>${rating}/10</strong>
                 </p>
 
