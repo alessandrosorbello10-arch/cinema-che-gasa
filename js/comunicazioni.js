@@ -24,6 +24,49 @@ const DRAFT_KEY = "cinemaCheGasaAnnouncementDrafts";
 let drafts = [];
 let selectedDraftId = null;
 
+/* Controllo accesso amministratore */
+
+async function checkAdminAccess() {
+    try {
+        const client = typeof supabaseClient !== "undefined"
+            ? supabaseClient
+            : typeof supabase !== "undefined"
+                ? supabase
+                : null;
+
+        if (!client) {
+            window.location.replace("../index.html");
+            return false;
+        }
+
+        const { data: { user }, error: authError } =
+            await client.auth.getUser();
+
+        if (authError || !user) {
+            window.location.replace("../index.html");
+            return false;
+        }
+
+        const { data: profile, error: profileError } = await client
+            .from("profiles")
+            .select("role")
+            .eq("id", user.id)
+            .single();
+
+        if (profileError || !profile || profile.role !== "admin") {
+            window.location.replace("../index.html");
+            return false;
+        }
+
+        return true;
+
+    } catch (error) {
+        console.error("Errore controllo accesso:", error);
+        window.location.replace("../index.html");
+        return false;
+    }
+}
+
 function createId() {
     return crypto.randomUUID();
 }
@@ -574,85 +617,95 @@ async function sendAnnouncement() {
     }
 }
 
-/* Gestione delle bozze */
+/* Inizializzazione protetta */
 
-draftSelect?.addEventListener("change", (event) => {
-    event.preventDefault();
+async function initializeCommunications() {
+    const authorized = await checkAdminAccess();
 
-    const id = draftSelect.value;
+    if (!authorized) return;
 
-    if (!id) {
+    /* Gestione delle bozze */
+
+    draftSelect?.addEventListener("change", (event) => {
+        event.preventDefault();
+
+        const id = draftSelect.value;
+
+        if (!id) {
+            resetForm();
+
+            showStatus(
+                draftStatus,
+                "Nuova comunicazione selezionata.",
+                "info"
+            );
+
+            return;
+        }
+
+        const draft = drafts.find((item) => item.id === id);
+
+        if (draft) loadDraft(draft);
+    });
+
+    saveDraftBtn?.addEventListener("click", (event) => {
+        event.preventDefault();
+        saveDraft();
+    });
+
+    deleteDraftBtn?.addEventListener("click", (event) => {
+        event.preventDefault();
+        deleteDraft();
+    });
+
+    previewButton?.addEventListener("click", (event) => {
+        event.preventDefault();
+        generatePreview();
+    });
+
+    clearAnnouncementBtn?.addEventListener("click", (event) => {
+        event.preventDefault();
         resetForm();
+    });
 
-        showStatus(
-            draftStatus,
-            "Nuova comunicazione selezionata.",
-            "info"
-        );
+    sendTestEmailBtn?.addEventListener("click", (event) => {
+        event.preventDefault();
+        sendTestEmail();
+    });
 
-        return;
-    }
+    sendAnnouncementBtn?.addEventListener("click", (event) => {
+        event.preventDefault();
+        sendAnnouncement();
+    });
 
-    const draft = drafts.find((item) => item.id === id);
-
-    if (draft) loadDraft(draft);
-});
-
-saveDraftBtn?.addEventListener("click", (event) => {
-    event.preventDefault();
-    saveDraft();
-});
-
-deleteDraftBtn?.addEventListener("click", (event) => {
-    event.preventDefault();
-    deleteDraft();
-});
-
-previewButton?.addEventListener("click", (event) => {
-    event.preventDefault();
-    generatePreview();
-});
-
-clearAnnouncementBtn?.addEventListener("click", (event) => {
-    event.preventDefault();
-    resetForm();
-});
-
-sendTestEmailBtn?.addEventListener("click", (event) => {
-    event.preventDefault();
-    sendTestEmail();
-});
-
-sendAnnouncementBtn?.addEventListener("click", (event) => {
-    event.preventDefault();
-    sendAnnouncement();
-});
-
-draftNameInput?.addEventListener("input", () => {
-    if (selectedDraftId) {
-        showStatus(
-            status,
-            "Hai modificato il nome. Premi «Salva bozza» per confermare.",
-            "info"
-        );
-    }
-});
-
-[typeInput, subjectInput, messageInput].forEach((input) => {
-    input?.addEventListener("input", () => {
+    draftNameInput?.addEventListener("input", () => {
         if (selectedDraftId) {
             showStatus(
                 status,
-                "Hai modifiche non salvate. Premi «Salva bozza» per conservarle.",
+                "Hai modificato il nome. Premi «Salva bozza» per confermare.",
                 "info"
             );
         }
     });
-});
 
-/* Inizializzazione */
+    [typeInput, subjectInput, messageInput].forEach((input) => {
+        input?.addEventListener("input", () => {
+            if (selectedDraftId) {
+                showStatus(
+                    status,
+                    "Hai modifiche non salvate. Premi «Salva bozza» per conservarle.",
+                    "info"
+                );
+            }
+        });
+    });
 
-drafts = getDrafts();
+    /* Caricamento iniziale */
 
-updateDraftMenu();
-resetPreview();
+    drafts = getDrafts();
+
+    updateDraftMenu();
+    resetPreview();
+}
+
+initializeCommunications();
